@@ -1,0 +1,38 @@
+{
+    "name": "phaser-starter",
+    "description": "Phaser starter project.",
+    "version": "0.0.0",
+    "main": "index.js",
+    "scripts": {
+        "lint": "eslint src --fix",
+        "typecheck": "tsc --noEmit",
+        "dev": "node esbuild/dev.server.mjs -w",
+        "build": "node esbuild/build.prod.mjs"
+    },
+    "dependencies": {
+        "@sentry/browser": "^10.22.0",
+        "@types/ramda": "^0.30.2",
+        "lil-gui": "^0.20.0",
+        "phaser": "^3.87.0",
+        "ramda": "^0.30.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.19.0",
+        "@jgoz/esbuild-plugin-livereload": "^2.0.5",
+        "dotenv": "^17.2.3",
+        "esbuild": "^0.21.5",
+        "esbuild-envfile-plugin": "^1.0.7",
+        "esbuild-plugin-clean": "^1.0.1",
+        "esbuild-plugin-copy": "^2.1.1",
+        "esbuild-plugin-inline-image": "^0.0.9",
+        "esbuild-serve": "^1.0.1",
+        "eslint": "^9.19.0",
+        "eslint-config-prettier": "^10.0.1",
+        "eslint-plugin-prettier": "^5.2.3",
+        "globals": "^15.14.0",
+        "prettier": "^3.4.2",
+        "prettier-plugin-organize-imports": "^4.1.0",
+        "typescript": "^5.4.5",
+        "typescript-eslint": "^8.22.0"
+    }
+}

@@ -1,0 +1,66 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "debug.tmx": {
+            "scale": 2.69,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 160.0371747211896,
+                "y": 159.85130111524165
+            }
+        },
+        "debug.tmx#debug": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "debug.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tilemap.tmx": {
+            "scale": 2.69,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 135.8736059479554,
+                "y": 159.85130111524165
+            }
+        },
+        "tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/Users/haydnsmith/src/phaser-starter/public/assets/tilemaps",
+    "last.imagePath": "/Users/haydnsmith/src/phaser-starter/public/assets/tilemaps",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 20,
+    "openFiles": [
+        "debug.tsx",
+        "debug.tmx"
+    ],
+    "project": "debug.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "debug.tsx",
+        "debug.tmx",
+        "tileset.tsx",
+        "tilemap.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 16,
+    "tileset.spacing": 16,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
