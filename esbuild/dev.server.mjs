@@ -30,6 +30,7 @@ esbuildServe(
     outfile: "public/bundle.min.js",
     plugins: [inlineImage()],
     define,
+    inject: ['./src/phaser-shim.js'],
   },
   { root: "public", port: 8080 },
 );

@@ -96,13 +96,13 @@ export class Preloader extends Phaser.Scene {
     logEvent('Creating "Preloader" scene.');
 
     // Register global shaders.
-    if (this.sys.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer) {
-      this.sys.renderer.pipelines.addPostPipeline(Shader.Glow, Glow);
-      this.sys.renderer.pipelines.addPostPipeline(Shader.Vignette, Vignette);
-      this.sys.renderer.pipelines.addPostPipeline(Shader.Noise, Noise);
-      this.sys.renderer.pipelines.addPostPipeline(Shader.SoftLight, SoftLight);
-      this.sys.renderer.pipelines.addPostPipeline(Shader.AntiAlias, Antialias);
-    }
+    // if (this.sys.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer) {
+    //   this.sys.renderer.pipelines.addPostPipeline(Shader.Glow, Glow);
+    //   this.sys.renderer.pipelines.addPostPipeline(Shader.Vignette, Vignette);
+    //   this.sys.renderer.pipelines.addPostPipeline(Shader.Noise, Noise);
+    //   this.sys.renderer.pipelines.addPostPipeline(Shader.SoftLight, SoftLight);
+    //   this.sys.renderer.pipelines.addPostPipeline(Shader.AntiAlias, Antialias);
+    // }
 
     // Register global animations.
     this.anims.create({

@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/browser';
-import 'phaser';
 
 import { Boot } from 'scenes/boot';
 import { Debug } from 'scenes/debug';
