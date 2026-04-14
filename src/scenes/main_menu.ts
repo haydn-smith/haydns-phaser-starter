@@ -1,14 +1,17 @@
 import { actionInput } from 'common/factories/input';
+import { Audio } from 'common/objects/audio';
+import { Camera } from 'common/objects/camera';
+import { Input } from 'common/objects/input/input';
+import { Sequence } from 'common/objects/sequence';
 import { Typewriter } from 'common/objects/typewriter';
+import { RunCallback } from 'common/sequences/run_callback';
+import { RunTween } from 'common/sequences/run_tween';
+import { Wait } from 'common/sequences/wait';
+import { WaitForInput } from 'common/sequences/wait_for_input';
+import { setFlag } from 'common/utils/flags';
 import { logEvent } from 'common/utils/log';
 import { scaled } from 'common/utils/scaled';
 import { Action, Animation, Depth, Flag, Scene, Sound } from 'constants';
-import { audio } from 'systems/audio';
-import { camera } from 'systems/camera';
-import { checkFlag, setFlag } from 'systems/flags';
-import { Input } from 'systems/input';
-import { runCallback, runTween, sequence, wait, waitForInput } from 'systems/sequence';
-import { ui, UserInterface } from 'systems/ui';
 
 export class MainMenu extends Phaser.Scene {
   private typewriter: Typewriter;
@@ -17,8 +20,6 @@ export class MainMenu extends Phaser.Scene {
 
   private inputs: Input;
 
-  private ui: UserInterface;
-
   constructor() {
     super(Scene.MainMenu);
   }
@@ -26,13 +27,11 @@ export class MainMenu extends Phaser.Scene {
   create() {
     logEvent('Creating "MainMenu" scene.');
 
-    if (checkFlag(Flag.SkipMainMenu)) {
-      this.scene.start(Scene.Debug);
-    }
+    // if (checkFlag(Flag.SkipMainMenu)) {
+    //   this.scene.start(Scene.Debug);
+    // }
 
-    this.ui = ui(this).black();
-
-    camera(this);
+    this.add.existing(new Camera(this));
 
     this.typewriter = this.add.existing(new Typewriter(this)).setDepth(Depth.UI).setScrollFactor(0);
 
@@ -40,34 +39,31 @@ export class MainMenu extends Phaser.Scene {
 
     this.inputs = actionInput(this);
 
-    const activate = audio(this, Sound.Activate);
+    const activate = new Audio(this, Sound.Activate);
 
-    sequence(this)
-      .of([
-        wait(1000),
-        runCallback(() => this.ui.fadeIn(1000, 'Linear')),
-        wait(500),
-        runCallback(() => this.typewriter.typewrite(`Are you ready to begin your journey?`)),
-        wait(() => this.typewriter.typewriteDuration()),
-        wait(500),
-        runCallback(() => this.typewriter2.typewrite(`Press [animation:${Animation.ZButton}] to start.`)),
-        wait(() => this.typewriter2.typewriteDuration()),
-        waitForInput(this.inputs, Action.Action),
-        runCallback(() => activate.play()),
-        runTween(this, {
-          targets: this.typewriter,
-          alpha: 0,
-          duration: 400,
-        }),
-        runTween(this, {
-          targets: this.typewriter2,
-          alpha: 0,
-          duration: 400,
-        }),
-        runCallback(() => this.ui.fadeOut(1000)),
-        wait(1000),
-        runCallback(() => this.scene.start(Scene.Debug)),
-      ])
+    new Sequence(this, [
+      new Wait(1000),
+      new RunCallback(() => this.typewriter.typewrite(`Are you ready to begin your journey?`)),
+      new Wait(() => this.typewriter.typewriteDuration()),
+      new Wait(500),
+      new RunCallback(() => this.typewriter2.typewrite(`Press [animation:${Animation.ZButton}] to start.`)),
+      new Wait(() => this.typewriter2.typewriteDuration()),
+      new WaitForInput(this.inputs, Action.Action),
+      new RunCallback(() => activate.play()),
+      new RunTween(this, {
+        targets: this.typewriter,
+        alpha: 0,
+        duration: 400,
+      }),
+      new RunTween(this, {
+        targets: this.typewriter2,
+        alpha: 0,
+        duration: 400,
+      }),
+      new Wait(1000),
+      new RunCallback(() => this.scene.start(Scene.Debug)),
+    ])
+      .addToUpdateList()
       .start()
       .destroyWhenComplete();
 

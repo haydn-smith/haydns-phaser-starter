@@ -1,6 +1,5 @@
 import { scaled } from 'common/utils/scaled';
 import { Animation, Font, GlobalScale } from 'constants';
-import { debugDepth } from 'systems/flags';
 
 export class Typewriter extends Phaser.GameObjects.Container {
   private textObjects: (Phaser.GameObjects.BitmapText | Phaser.GameObjects.Sprite)[] = [];
@@ -21,7 +20,6 @@ export class Typewriter extends Phaser.GameObjects.Container {
 
     this.setScrollFactor(0);
     this.setPosition(this.scene.renderer.width / 2, this.scene.renderer.height / 2);
-    this.setDepth(debugDepth());
   }
 
   public setText(text: string, typeFrom: number = 0): Typewriter {

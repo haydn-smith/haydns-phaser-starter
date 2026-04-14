@@ -1,6 +1,6 @@
 import { rect } from 'common/factories/phaser';
 import { Depth, GlobalScale, Tileset, TypeOfTilemap } from 'constants';
-import { collision } from 'systems/collision';
+import { Collision } from './collision';
 
 export class Tilemap extends Phaser.GameObjects.GameObject {
   private map: Phaser.Tilemaps.Tilemap;
@@ -24,7 +24,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
       layer.tilemapLayer.forEachTile((tile) => {
         if (tile.properties?.collision) {
-          collision(
+          Collision.fromArea(
             this.scene,
             rect(
               tile.x * layer.tileWidth * layer.tilemapLayer.scaleX,

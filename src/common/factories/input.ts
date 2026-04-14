@@ -1,8 +1,9 @@
+import { GamepadButton } from 'common/objects/input/gamepad_input';
+import { Input } from 'common/objects/input/input';
 import { Action } from 'constants';
-import { GamepadButton, input } from 'systems/input';
 
 export const allInputs = (scene: Phaser.Scene) => {
-  return input(scene)
+  return new Input(scene)
     .addKeyboardInput(Action.Action, Phaser.Input.Keyboard.KeyCodes.Z)
     .addGamepadInput(Action.Action, GamepadButton.A)
     .addGamepadInput(Action.Action, GamepadButton.B)
@@ -25,14 +26,14 @@ export const allInputs = (scene: Phaser.Scene) => {
 };
 
 export const actionInput = (scene: Phaser.Scene) => {
-  return input(scene)
+  return new Input(scene)
     .addKeyboardInput(Action.Action, Phaser.Input.Keyboard.KeyCodes.Z)
     .addGamepadInput(Action.Action, GamepadButton.A)
     .addGamepadInput(Action.Action, GamepadButton.B);
 };
 
 export const directionalInputs = (scene: Phaser.Scene) => {
-  return input(scene)
+  return new Input(scene)
     .addKeyboardInput(Action.Up, Phaser.Input.Keyboard.KeyCodes.UP)
     .addKeyboardInput(Action.Up, Phaser.Input.Keyboard.KeyCodes.W)
     .addGamepadInput(Action.Up, GamepadButton.Up)

@@ -11,7 +11,6 @@ export default [
   ...tseslint.configs.recommended,
   prettier,
   {rules: {
-    "no-restricted-imports": ["error", { "patterns": [".*"] }],
     "@typescript-eslint/no-unused-expressions": ["error", { "allowTernary": true }],
   }}
 ];

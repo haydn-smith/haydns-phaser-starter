@@ -1,12 +1,6 @@
-import { Antialias } from 'common/objects/shaders/anti_alias';
-import { Glow } from 'common/objects/shaders/glow';
-import { Noise } from 'common/objects/shaders/noise';
-import { SoftLight } from 'common/objects/shaders/soft_light';
-import { Vignette } from 'common/objects/shaders/vignette';
 import { logEvent } from 'common/utils/log';
 import { scaled } from 'common/utils/scaled';
-import { Animation, Depth, Font, Scene, Shader, Sound, Sprite, Tilemap, Tileset } from 'constants';
-import { startUI } from 'systems/ui';
+import { Animation, Font, Scene, Sound, Sprite, Tilemap, Tileset } from 'constants';
 
 export class Preloader extends Phaser.Scene {
   constructor() {
@@ -95,15 +89,6 @@ export class Preloader extends Phaser.Scene {
   create() {
     logEvent('Creating "Preloader" scene.');
 
-    // Register global shaders.
-    // if (this.sys.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer) {
-    //   this.sys.renderer.pipelines.addPostPipeline(Shader.Glow, Glow);
-    //   this.sys.renderer.pipelines.addPostPipeline(Shader.Vignette, Vignette);
-    //   this.sys.renderer.pipelines.addPostPipeline(Shader.Noise, Noise);
-    //   this.sys.renderer.pipelines.addPostPipeline(Shader.SoftLight, SoftLight);
-    //   this.sys.renderer.pipelines.addPostPipeline(Shader.AntiAlias, Antialias);
-    // }
-
     // Register global animations.
     this.anims.create({
       key: Animation.DebugPlayer,
@@ -119,10 +104,8 @@ export class Preloader extends Phaser.Scene {
     });
 
     // Start management scenes.
-    startUI(this, {
-      depth: Depth.UI,
-      debugFont: Font.DefaultWhite,
-    });
+    // TODO: A transition manager scene.
+    // TODO: An audio manager scene.
 
     // Allow the sound to play.
     this.sound.unlock();

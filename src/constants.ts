@@ -3,6 +3,7 @@ export const Depth = {
   Main: 2000,
   Foreground: 3000,
   UI: 4000,
+  Debug: 9999,
 } as const;
 export type KeyOfDepth = keyof typeof Depth;
 export type TypeOfDepth = (typeof Depth)[KeyOfDepth];

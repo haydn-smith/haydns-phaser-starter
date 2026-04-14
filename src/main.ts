@@ -1,10 +1,11 @@
 import * as Sentry from '@sentry/browser';
+import { setDebug } from 'common/utils/flags';
+import 'phaser';
 
 import { Boot } from 'scenes/boot';
 import { Debug } from 'scenes/debug';
 import { MainMenu } from 'scenes/main_menu';
 import { Preloader } from 'scenes/preloader';
-import { setDebug } from 'systems/flags';
 
 // @ts-expect-error Injected environment variable.
 if (process.env.PHASER_SENTRY_DSN) {
