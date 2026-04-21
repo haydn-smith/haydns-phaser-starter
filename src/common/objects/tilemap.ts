@@ -1,11 +1,16 @@
 import { rect } from 'common/factories/phaser';
-import { Depth, GlobalScale, Tileset, TypeOfTilemap } from 'constants';
+import { Scene } from 'common/scene';
+import { scaled } from 'common/utils/scaled';
+import { Depth, Tileset, TypeOfTilemap } from 'constants';
 import { Collision } from './collision';
 
 export class Tilemap extends Phaser.GameObjects.GameObject {
   private map: Phaser.Tilemaps.Tilemap;
 
-  constructor(scene: Phaser.Scene, tilemap: TypeOfTilemap) {
+  constructor(
+    public scene: Scene,
+    tilemap: TypeOfTilemap
+  ) {
     super(scene, 'Tilemap');
 
     this.renderFlags = 0;
@@ -20,7 +25,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     }
 
     this.map.layers.forEach((layer) => {
-      layer.tilemapLayer.setScale(GlobalScale);
+      layer.tilemapLayer.setScale(scaled());
 
       layer.tilemapLayer.forEachTile((tile) => {
         if (tile.properties?.collision) {
@@ -55,7 +60,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
     return points.objects
       .filter((p) => p.point && p.name === key)
-      .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(GlobalScale)));
+      .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(scaled())));
   }
 
   public forAreas(key: string, fn: (r: Phaser.Geom.Rectangle) => void): Tilemap {
@@ -77,12 +82,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
       .filter((a) => a.rectangle && a.name === key)
       .map(
         (a) =>
-          new Phaser.Geom.Rectangle(
-            (a?.x ?? 0) * GlobalScale,
-            (a?.y ?? 0) * GlobalScale,
-            (a?.width ?? 0) * GlobalScale,
-            (a?.height ?? 0) * GlobalScale
-          )
+          new Phaser.Geom.Rectangle(scaled(a?.x ?? 0), scaled(a?.y ?? 0), scaled(a?.width ?? 0), scaled(a?.height ?? 0))
       );
   }
 }

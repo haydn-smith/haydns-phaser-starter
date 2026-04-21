@@ -1,5 +1,5 @@
 import { vec2 } from 'common/factories/phaser';
-import { isDebug } from 'common/utils/flags';
+import { Scene } from 'common/scene';
 import { clamp, normalize } from 'common/utils/math';
 import { Depth } from 'constants';
 import { Collision } from './collision';
@@ -73,7 +73,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
   private movementFn: MovementFn = velocityMovement;
 
   constructor(
-    scene: Phaser.Scene,
+    public scene: Scene,
     private actor: Phaser.GameObjects.Container,
     private collision: Collision
   ) {
@@ -121,7 +121,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
   }
 
   public preUpdate(_: number, delta: number) {
-    if (isDebug()) {
+    if (this.scene.app().isDebug()) {
       const d = this.actor.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics

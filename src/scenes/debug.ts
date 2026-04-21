@@ -5,10 +5,10 @@ import { Camera } from 'common/objects/camera';
 import { Input } from 'common/objects/input/input';
 import { Player } from 'common/objects/player';
 import { SpatialAudio } from 'common/objects/spatial_audio';
-import { logEvent } from 'common/utils/log';
-import { Action, Depth, Scene, Sound } from 'constants';
+import { Scene } from 'common/scene';
+import { Action, Depth, SCENE, Sound } from 'constants';
 
-export class Debug extends Phaser.Scene {
+export class Debug extends Scene {
   private player: Phaser.GameObjects.Container;
 
   private inputs: Input;
@@ -20,12 +20,10 @@ export class Debug extends Phaser.Scene {
   private music: SpatialAudio;
 
   constructor() {
-    super(Scene.Debug);
+    super(SCENE.Debug);
   }
 
   create() {
-    logEvent('Creating "Debug" scene.');
-
     const map = debugMap(this);
 
     this.player = new Player(this)

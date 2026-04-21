@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import { setDebug } from 'common/utils/flags';
+import { Game } from 'common/game';
 import 'phaser';
 
 import { Boot } from 'scenes/boot';
@@ -30,16 +30,16 @@ if (process.env.PHASER_SENTRY_DSN) {
   });
 }
 
-// @ts-expect-error Injected environment variable.
-setDebug(process.env.PHASER_DEBUG === 'true');
-
 const config: Phaser.Types.Core.GameConfig = {
+  // @ts-expect-error Injected environment variable.
+  debug: process.env.PHASER_DEBUG === 'true',
   type: Phaser.AUTO,
-  width: 320,
-  height: 240,
+  width: 1280,
+  height: 720,
   parent: 'game-container',
   backgroundColor: '#000000',
-  pixelArt: true,
+  antialias: true,
+  roundPixels: false,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -50,4 +50,4 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: [Boot, Preloader, MainMenu, Debug],
 };
 
-export default new Phaser.Game(config);
+export default new Game(config);

@@ -1,4 +1,4 @@
-import { isDebug } from 'common/utils/flags';
+import { Scene } from 'common/scene';
 import { clamp, normalize } from 'common/utils/math';
 import { Depth } from 'constants';
 
@@ -8,7 +8,7 @@ export class SpatialAudio extends Phaser.GameObjects.Container {
   private graphics: Phaser.GameObjects.Graphics;
 
   constructor(
-    scene: Phaser.Scene,
+    public scene: Scene,
     key: string,
     private distance: number = 100,
     private volume = 1
@@ -23,7 +23,7 @@ export class SpatialAudio extends Phaser.GameObjects.Container {
   public preUpdate() {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
 
-    if (isDebug()) {
+    if (this.scene.app().isDebug()) {
       this.graphics.setDepth(Depth.Debug).fillStyle(0xff0000, 1).fillPoint(d.translateX, d.translateY, 2);
     }
 

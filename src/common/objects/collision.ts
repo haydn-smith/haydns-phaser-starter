@@ -1,4 +1,4 @@
-import { isDebug } from 'common/utils/flags';
+import { Scene } from 'common/scene';
 import { Depth } from 'constants';
 
 const getAllChildren = (scene: Phaser.Scene): Phaser.GameObjects.GameObject[] => {
@@ -22,7 +22,13 @@ export class Collision extends Phaser.GameObjects.Zone {
 
   public collisionMask: number = 0x1111;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number) {
+  constructor(
+    public scene: Scene,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
     super(scene, x, y, width, height);
 
     this.setName('Collision');
@@ -30,12 +36,12 @@ export class Collision extends Phaser.GameObjects.Zone {
     this.graphics = this.scene.add.graphics();
   }
 
-  public static fromArea(scene: Phaser.Scene, area: Phaser.Geom.Rectangle) {
+  public static fromArea(scene: Scene, area: Phaser.Geom.Rectangle) {
     return new Collision(scene, area.x, area.y, area.width, area.height);
   }
 
   public preUpdate() {
-    if (isDebug()) {
+    if (this.scene.app().isDebug()) {
       const d = this.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics

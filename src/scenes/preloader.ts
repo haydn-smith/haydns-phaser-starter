@@ -1,58 +1,31 @@
-import { logEvent } from 'common/utils/log';
-import { scaled } from 'common/utils/scaled';
-import { Animation, Font, Scene, Sound, Sprite, Tilemap, Tileset } from 'constants';
+import { Scene } from 'common/scene';
+import { Animation, Font, SCENE, Sound, Sprite, Tilemap, Tileset } from 'constants';
 
-export class Preloader extends Phaser.Scene {
+export class Preloader extends Scene {
   constructor() {
-    super('Preloader');
+    super(SCENE.Preloader);
   }
 
   init() {
+    // Ensures the loading bar is approximately the same
+    // size regardless of renderer size.
+    const scaled = (n: number) => n * (this.height() / 240);
+
     this.add
-      .rectangle(
-        this.renderer.width / 2 - scaled(32),
-        this.renderer.height / 2 - scaled(2),
-        scaled(64),
-        scaled(1),
-        0xffffff
-      )
+      .rectangle(this.width() / 2 - scaled(32), this.height() / 2 - scaled(2), scaled(64), scaled(1), 0xffffff)
       .setOrigin(0, 0);
     this.add
-      .rectangle(
-        this.renderer.width / 2 - scaled(32),
-        this.renderer.height / 2 + scaled(2),
-        scaled(64),
-        scaled(1),
-        0xffffff
-      )
+      .rectangle(this.width() / 2 - scaled(32), this.height() / 2 + scaled(2), scaled(64), scaled(1), 0xffffff)
       .setOrigin(0, 0);
     this.add
-      .rectangle(
-        this.renderer.width / 2 - scaled(33),
-        this.renderer.height / 2 - scaled(1),
-        scaled(1),
-        scaled(3),
-        0xffffff
-      )
+      .rectangle(this.width() / 2 - scaled(33), this.height() / 2 - scaled(1), scaled(1), scaled(3), 0xffffff)
       .setOrigin(0, 0);
     this.add
-      .rectangle(
-        this.renderer.width / 2 + scaled(32),
-        this.renderer.height / 2 - scaled(1),
-        scaled(1),
-        scaled(3),
-        0xffffff
-      )
+      .rectangle(this.width() / 2 + scaled(32), this.height() / 2 - scaled(1), scaled(1), scaled(3), 0xffffff)
       .setOrigin(0, 0);
 
     const bar = this.add
-      .rectangle(
-        this.renderer.width / 2 - scaled(32),
-        this.renderer.height / 2 - scaled(2),
-        scaled(0),
-        scaled(4),
-        0xffffff
-      )
+      .rectangle(this.width() / 2 - scaled(32), this.height() / 2 - scaled(2), scaled(0), scaled(4), 0xffffff)
       .setOrigin(0, 0);
 
     this.load.on('progress', (progress: number) => {
@@ -87,8 +60,6 @@ export class Preloader extends Phaser.Scene {
   }
 
   create() {
-    logEvent('Creating "Preloader" scene.');
-
     // Register global animations.
     this.anims.create({
       key: Animation.DebugPlayer,
@@ -111,6 +82,6 @@ export class Preloader extends Phaser.Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start(Scene.MainMenu);
+    this.scene.start(SCENE.MainMenu);
   }
 }

@@ -1,9 +1,9 @@
-import { logEvent } from 'common/utils/log';
-import { Scene } from 'constants';
+import { Scene } from 'common/scene';
+import { SCENE } from 'constants';
 
-export class Boot extends Phaser.Scene {
+export class Boot extends Scene {
   constructor() {
-    super('Boot');
+    super(SCENE.Boot);
   }
 
   preload() {
@@ -11,8 +11,6 @@ export class Boot extends Phaser.Scene {
   }
 
   create() {
-    logEvent('Creating "Boot" scene.');
-
-    this.scene.start(Scene.Preloader);
+    this.scene.start(SCENE.Preloader);
   }
 }

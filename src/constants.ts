@@ -18,15 +18,15 @@ export const Action = {
 export type KeyOfAction = keyof typeof Action;
 export type TypeOfAction = (typeof Action)[KeyOfAction];
 
-export const Scene = {
+export const SCENE = {
   Boot: 'Boot',
   Preloader: 'Preloader',
   MainMenu: 'Main Menu',
   UserInterface: 'User Interface',
   Debug: 'Debug',
 } as const;
-export type KeyOfScene = keyof typeof Scene;
-export type TypeOfScene = (typeof Scene)[KeyOfScene];
+export type KeyOfScene = keyof typeof SCENE;
+export type TypeOfScene = (typeof SCENE)[KeyOfScene];
 
 export const Shader = {
   Glow: 'Glow',
@@ -86,7 +86,7 @@ export const CollisionMask = {
 export type KeyOfCollisionMask = keyof typeof CollisionMask;
 export type TYPE_OF_COLLISION_MASK = (typeof CollisionMask)[KeyOfCollisionMask];
 
-export const GlobalScale = 1;
+export const GLOBAL_SCALE = 1;
 
 export const Flag = {
   SkipMainMenu: 'skip_main_menu',

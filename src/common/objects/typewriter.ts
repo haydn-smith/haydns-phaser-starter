@@ -1,5 +1,5 @@
 import { scaled } from 'common/utils/scaled';
-import { Animation, Font, GlobalScale } from 'constants';
+import { Animation, Font } from 'constants';
 
 export class Typewriter extends Phaser.GameObjects.Container {
   private textObjects: (Phaser.GameObjects.BitmapText | Phaser.GameObjects.Sprite)[] = [];
@@ -56,7 +56,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
           .sprite(this.textWidth, this.textHeight, key)
           .setOrigin(0, 0)
           .setAlpha(index >= typeFrom ? 0 : 1)
-          .setScale(GlobalScale);
+          .setScale(scaled());
 
         const actualKey = Object.values(Animation).find((animation) => animation === key);
 

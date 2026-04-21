@@ -1,3 +1,3 @@
-import * as Constants from 'constants';
+import { GLOBAL_SCALE } from 'constants';
 
-export const scaled = (n: number): number => n * Constants.GlobalScale;
+export const scaled = (n: number = 1): number => n * GLOBAL_SCALE;
