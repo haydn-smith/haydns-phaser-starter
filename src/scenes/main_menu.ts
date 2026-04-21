@@ -36,11 +36,11 @@ export class MainMenu extends Scene {
 
     new Sequence(this, [
       new Wait(1000),
-      new RunCallback(() => this.typewriter.typewrite(`Are you ready to begin your journey?`)),
-      new Wait(() => this.typewriter.typewriteDuration()),
+      new RunCallback(() => this.typewriter.write(`Are you ready\nto begin your journey?`)),
+      new Wait(() => this.typewriter.writeDuration()),
       new Wait(500),
-      new RunCallback(() => this.typewriter2.typewrite(`Press [animation:${Animation.ZButton}] to start.`)),
-      new Wait(() => this.typewriter2.typewriteDuration()),
+      new RunCallback(() => this.typewriter2.write(`Press [animation:${Animation.ZButton}] to\nstart.`)),
+      new Wait(() => this.typewriter2.writeDuration()),
       new WaitForInput(this.inputs, Action.Action),
       new RunCallback(() => activate.play()),
       new RunTween(this, {
@@ -64,11 +64,13 @@ export class MainMenu extends Scene {
   }
 
   update() {
-    this.typewriter.setPosition(this.width() / 2 - this.typewriter.typewriterWidth() / 2, this.height() / 2);
+    this.typewriter.setPosition(0, 0);
+
+    // this.typewriter.setPosition(this.width() / 2 - this.typewriter.typewriterWidth() / 2, this.height() / 2);
 
     this.typewriter2.setPosition(
-      this.width() / 2 - this.typewriter2.typewriterWidth() / 2,
-      this.height() / 2 + scaled(16)
+      this.width() / 2 - this.typewriter2.writeWidth() / 2,
+      this.height() / 2 + scaled(this.height() / 16)
     );
   }
 }

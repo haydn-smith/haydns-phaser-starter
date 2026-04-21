@@ -1,3 +1,4 @@
+import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
 import { Animation, Font } from 'constants';
 
@@ -10,16 +11,17 @@ export class Typewriter extends Phaser.GameObjects.Container {
 
   private typeFrom = 0;
 
-  private linePadding = scaled(4);
-
   constructor(
-    scene: Phaser.Scene,
-    private font: string = Font.DefaultWhite
+    public scene: Scene,
+    private font: string = Font.DefaultWhite,
+    private fontHeight: number = 7,
+    private fontSize: number = 14,
+    private lineHeight: number = 2,
+    private characterAnimationDuration: number = 250,
+    private characterAnimationDelay: number = 30,
+    private characterAnimationOffset: number = 1.5
   ) {
     super(scene);
-
-    this.setScrollFactor(0);
-    this.setPosition(this.scene.renderer.width / 2, this.scene.renderer.height / 2);
   }
 
   public setText(text: string, typeFrom: number = 0): Typewriter {
@@ -36,12 +38,15 @@ export class Typewriter extends Phaser.GameObjects.Container {
       if (c !== '[') {
         const text = this.scene.add
           .bitmapText(this.textWidth, this.textHeight, this.font, c)
-          .setAlpha(index >= typeFrom ? 0 : 1);
+          .setAlpha(index >= typeFrom ? 0 : 1)
+          .setScale(this.fontSize / this.fontHeight);
+
+        text.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         this.textWidth += text.width;
 
         if (c === '\n') {
-          this.textHeight += scaled(8) + this.linePadding;
+          this.textHeight += scaled(this.fontSize * this.lineHeight);
           this.textWidth = 0;
         }
 
@@ -55,14 +60,16 @@ export class Typewriter extends Phaser.GameObjects.Container {
         const obj = this.scene.add
           .sprite(this.textWidth, this.textHeight, key)
           .setOrigin(0, 0)
-          .setAlpha(index >= typeFrom ? 0 : 1)
-          .setScale(scaled());
+          .setAlpha(index >= typeFrom ? 0 : 1);
 
         const actualKey = Object.values(Animation).find((animation) => animation === key);
 
         if (type === 'animation' && actualKey) {
           obj.anims.play(actualKey);
         }
+
+        obj.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        obj.setScale((this.fontSize / obj.height) * 2);
 
         this.textWidth += obj.displayWidth;
 
@@ -83,13 +90,13 @@ export class Typewriter extends Phaser.GameObjects.Container {
 
       this.scene.tweens.add({
         targets: o,
-        duration: 250,
-        delay: (index - this.typeFrom) * 30,
+        duration: this.characterAnimationDuration,
+        delay: (index - this.typeFrom) * this.characterAnimationDelay,
         props: {
           y: {
             ease: 'Back.Out',
             to: o.y,
-            from: o.y + scaled(16),
+            from: o.y + scaled(this.fontSize * this.characterAnimationOffset),
           },
           alpha: {
             ease: 'Quadratic.In',
@@ -103,15 +110,17 @@ export class Typewriter extends Phaser.GameObjects.Container {
     return this;
   }
 
-  public typewrite(text: string, from: number = 0): Typewriter {
+  public write(text: string, from: number = 0): Typewriter {
     return this.setText(text, from).play();
   }
 
-  public typewriteDuration(): number {
-    return (this.textObjects.length - 1 - this.typeFrom) * 30 + 250;
+  public writeDuration(): number {
+    return (
+      (this.textObjects.length - 1 - this.typeFrom) * this.characterAnimationDelay + this.characterAnimationDuration
+    );
   }
 
-  public typewriterWidth(): number {
+  public writeWidth(): number {
     const left = this.textObjects.map((o) => o.x).sort((a, b) => a - b)[0] ?? 0;
 
     const right =

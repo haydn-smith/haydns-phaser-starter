@@ -31,8 +31,6 @@ if (process.env.PHASER_SENTRY_DSN) {
 }
 
 const config: Phaser.Types.Core.GameConfig = {
-  // @ts-expect-error Injected environment variable.
-  debug: process.env.PHASER_DEBUG === 'true',
   type: Phaser.AUTO,
   width: 1280,
   height: 720,
@@ -50,4 +48,8 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: [Boot, Preloader, MainMenu, Debug],
 };
 
-export default new Game(config);
+export default new Game({
+  // @ts-expect-error Injected environment variable.
+  debug: process.env.PHASER_DEBUG === 'true',
+  ...config,
+});
