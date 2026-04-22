@@ -8,7 +8,10 @@ export class KeyboardInput extends Phaser.GameObjects.GameObject implements Inpu
 
   private justPressedHasBeenFired: boolean = false;
 
-  constructor(public scene: Scene, key: string | number) {
+  constructor(
+    public scene: Scene,
+    key: string | number
+  ) {
     super(scene, 'Keyboard Input');
 
     this.key = this.scene.input.keyboard?.addKey(key);

@@ -1,7 +1,7 @@
 import { Inputtable } from 'common/contracts/inputtable';
+import { Scene } from 'common/scene';
 import { Gamepad, GamepadInput, TypeOfGamepad, TypeOfGamepadButton } from './gamepad_input';
 import { KeyboardInput } from './keyboard_input';
-import { Scene } from 'common/scene';
 
 export class Input extends Phaser.GameObjects.GameObject {
   private mappings: Record<string, Inputtable[]> = {};

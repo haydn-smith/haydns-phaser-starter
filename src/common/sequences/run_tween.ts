@@ -8,7 +8,10 @@ export class RunTween implements Sequenceable {
 
   private tween;
 
-  constructor(public scene: Scene, config: Phaser.Types.Tweens.TweenChainBuilderConfig) {
+  constructor(
+    public scene: Scene,
+    config: Phaser.Types.Tweens.TweenChainBuilderConfig
+  ) {
     config = {
       ...config,
       paused: true,

@@ -11,6 +11,8 @@ export class Typewriter extends Phaser.GameObjects.Container {
 
   private typeFrom = 0;
 
+  private filter: Phaser.Textures.FilterMode = Phaser.Textures.FilterMode.LINEAR;
+
   constructor(
     public scene: Scene,
     private font: TypeOfFont = FONT.DefaultWhite,
@@ -22,6 +24,12 @@ export class Typewriter extends Phaser.GameObjects.Container {
     private characterAnimationOffset: number = 1.5
   ) {
     super(scene);
+  }
+
+  public setInterpolation(filter: Phaser.Textures.FilterMode): this {
+    this.filter = filter;
+
+    return this;
   }
 
   public setText(text: string, typeFrom: number = 0): Typewriter {
@@ -41,7 +49,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
           .setAlpha(index >= typeFrom ? 0 : 1)
           .setScale(this.fontSize / this.fontHeight);
 
-        text.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+        text.texture.setFilter(this.filter);
 
         this.textWidth += text.width;
 

@@ -26,9 +26,17 @@ export class MainMenu extends Scene {
   create() {
     this.add.existing(new Camera(this));
 
-    this.typewriter = this.add.existing(new Typewriter(this)).setDepth(DEPTH.UI).setScrollFactor(0);
+    this.typewriter = this.add
+      .existing(new Typewriter(this))
+      .setDepth(DEPTH.UI)
+      .setScrollFactor(0)
+      .setInterpolation(Phaser.Textures.FilterMode.NEAREST);
 
-    this.typewriter2 = this.add.existing(new Typewriter(this)).setDepth(DEPTH.UI).setScrollFactor(0);
+    this.typewriter2 = this.add
+      .existing(new Typewriter(this))
+      .setDepth(DEPTH.UI)
+      .setScrollFactor(0)
+      .setInterpolation(Phaser.Textures.FilterMode.NEAREST);
 
     this.add
       .existing(new Typewriter(this, FONT.SourGummyBlack, 32, 48))
