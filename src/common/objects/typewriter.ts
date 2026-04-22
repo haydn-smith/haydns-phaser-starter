@@ -29,7 +29,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
   constructor(
     public scene: Scene,
     {
-      font = FONT.DefaultWhite,
+      font = FONT.MonogramWhite,
       fontHeight = 7,
       fontSize = 14,
       lineHeight = 2,

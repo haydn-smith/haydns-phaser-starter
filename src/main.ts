@@ -4,6 +4,7 @@ import 'phaser';
 
 import { Boot } from 'scenes/boot';
 import { Debug } from 'scenes/debug';
+import { TypewriterExample } from 'scenes/examples/typewriter_example';
 import { MainMenu } from 'scenes/main_menu';
 import { Preloader } from 'scenes/preloader';
 
@@ -35,7 +36,7 @@ const config: Phaser.Types.Core.GameConfig = {
   width: 1280,
   height: 720,
   parent: 'game-container',
-  backgroundColor: '#bbb',
+  backgroundColor: '#000000',
   antialias: true,
   roundPixels: false,
   scale: {
@@ -45,7 +46,14 @@ const config: Phaser.Types.Core.GameConfig = {
   input: {
     gamepad: true,
   },
-  scene: [Boot, Preloader, MainMenu, Debug],
+  scene: [
+    // All scenes that can be started in the game.
+    Boot,
+    Preloader,
+    MainMenu,
+    Debug,
+    TypewriterExample,
+  ],
 };
 
 export default new Game({

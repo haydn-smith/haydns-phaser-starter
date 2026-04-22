@@ -37,8 +37,8 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     // Fonts.
-    this.load.bitmapFont(FONT.DefaultWhite, FONT.DefaultWhite, FONT.DefaultXml);
-    this.load.bitmapFont(FONT.DefaultBlack, FONT.DefaultBlack, FONT.DefaultXml);
+    this.load.bitmapFont(FONT.MonogramWhite, FONT.MonogramWhite, FONT.MonogramXml);
+    this.load.bitmapFont(FONT.MonogramBlack, FONT.MonogramBlack, FONT.MonogramXml);
     this.load.bitmapFont(FONT.SourGummyWhite, FONT.SourGummyWhite, FONT.SourGummyXml);
     this.load.bitmapFont(FONT.SourGummyBlack, FONT.SourGummyBlack, FONT.SourGummyXml);
 
@@ -84,6 +84,6 @@ export class Preloader extends Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start(SCENE.MainMenu);
+    this.scene.start(`Typewriter Example`);
   }
 }

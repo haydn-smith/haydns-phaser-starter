@@ -50,9 +50,9 @@ export type KeyOfSprite = keyof typeof SPRITE;
 export type TypeOfSprite = (typeof SPRITE)[KeyOfSprite];
 
 export const FONT = {
-  DefaultWhite: 'fonts/monogram-white.png',
-  DefaultBlack: 'fonts/monogram-black.png',
-  DefaultXml: 'fonts/monogram.xml',
+  MonogramWhite: 'fonts/monogram-white.png',
+  MonogramBlack: 'fonts/monogram-black.png',
+  MonogramXml: 'fonts/monogram.xml',
   SourGummyWhite: 'fonts/sour-gummy-white.png',
   SourGummyBlack: 'fonts/sour-gummy-black.png',
   SourGummyXml: 'fonts/sour-gummy.xml',
