@@ -1,13 +1,14 @@
 import { Inputtable } from 'common/contracts/inputtable';
 import { Gamepad, GamepadInput, TypeOfGamepad, TypeOfGamepadButton } from './gamepad_input';
 import { KeyboardInput } from './keyboard_input';
+import { Scene } from 'common/scene';
 
 export class Input extends Phaser.GameObjects.GameObject {
   private mappings: Record<string, Inputtable[]> = {};
 
   private disabled: Record<string, boolean> = {};
 
-  constructor(scene: Phaser.Scene) {
+  constructor(public scene: Scene) {
     super(scene, 'Input');
 
     this.renderFlags = 0;

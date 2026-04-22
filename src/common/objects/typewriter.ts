@@ -1,6 +1,6 @@
 import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
-import { Animation, Font } from 'constants';
+import { ANIMATION, FONT, TypeOfFont } from 'constants';
 
 export class Typewriter extends Phaser.GameObjects.Container {
   private textObjects: (Phaser.GameObjects.BitmapText | Phaser.GameObjects.Sprite)[] = [];
@@ -13,7 +13,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
 
   constructor(
     public scene: Scene,
-    private font: string = Font.DefaultWhite,
+    private font: TypeOfFont = FONT.DefaultWhite,
     private fontHeight: number = 7,
     private fontSize: number = 14,
     private lineHeight: number = 2,
@@ -27,10 +27,10 @@ export class Typewriter extends Phaser.GameObjects.Container {
   public setText(text: string, typeFrom: number = 0): Typewriter {
     this.textObjects.forEach((to) => to.destroy());
     this.textWidth = 0;
-    this.textHeight = scaled(-12);
+    this.textHeight = 0;
     this.typeFrom = typeFrom;
-
     this.textObjects = [];
+
     const chars = text.split('');
     for (let index = 0; index < chars.length; index++) {
       const c = chars[index];
@@ -41,7 +41,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
           .setAlpha(index >= typeFrom ? 0 : 1)
           .setScale(this.fontSize / this.fontHeight);
 
-        text.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        text.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
 
         this.textWidth += text.width;
 
@@ -62,7 +62,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
           .setOrigin(0, 0)
           .setAlpha(index >= typeFrom ? 0 : 1);
 
-        const actualKey = Object.values(Animation).find((animation) => animation === key);
+        const actualKey = Object.values(ANIMATION).find((animation) => animation === key);
 
         if (type === 'animation' && actualKey) {
           obj.anims.play(actualKey);

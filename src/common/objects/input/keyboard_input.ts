@@ -1,4 +1,5 @@
 import { Inputtable } from 'common/contracts/inputtable';
+import { Scene } from 'common/scene';
 
 export class KeyboardInput extends Phaser.GameObjects.GameObject implements Inputtable {
   private key?: Phaser.Input.Keyboard.Key;
@@ -7,7 +8,7 @@ export class KeyboardInput extends Phaser.GameObjects.GameObject implements Inpu
 
   private justPressedHasBeenFired: boolean = false;
 
-  constructor(scene: Phaser.Scene, key: string | number) {
+  constructor(public scene: Scene, key: string | number) {
     super(scene, 'Keyboard Input');
 
     this.key = this.scene.input.keyboard?.addKey(key);

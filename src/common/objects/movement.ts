@@ -1,7 +1,7 @@
 import { vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { clamp, normalize } from 'common/utils/math';
-import { Depth } from 'constants';
+import { DEPTH } from 'constants';
 import { Collision } from './collision';
 import { States } from './states';
 
@@ -125,7 +125,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
       const d = this.actor.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics
-        .setDepth(Depth.Debug)
+        .setDepth(DEPTH.Debug)
         .clear()
         .lineStyle(6, 0xff0000, 1)
         .lineBetween(d.translateX, d.translateY, d.translateX + this.velocity.x, d.translateY + this.velocity.y)

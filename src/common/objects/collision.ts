@@ -1,7 +1,7 @@
 import { Scene } from 'common/scene';
-import { Depth } from 'constants';
+import { DEPTH } from 'constants';
 
-const getAllChildren = (scene: Phaser.Scene): Phaser.GameObjects.GameObject[] => {
+const getAllChildren = (scene: Scene): Phaser.GameObjects.GameObject[] => {
   return traverse(scene.children.getAll());
 };
 
@@ -45,7 +45,7 @@ export class Collision extends Phaser.GameObjects.Zone {
       const d = this.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics
-        .setDepth(Depth.Debug)
+        .setDepth(DEPTH.Debug)
         .clear()
         .lineStyle(1, 0xff0000, 1)
         .strokeRect(d.translateX, d.translateY, this.width * d.scaleX, this.height * d.scaleY);

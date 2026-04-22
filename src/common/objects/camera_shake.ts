@@ -1,3 +1,4 @@
+import { Scene } from 'common/scene';
 import { States } from './states';
 
 type ShakeStates = 'tweening' | 'create tween' | 'tween finished' | 'idle';
@@ -17,7 +18,7 @@ export class CameraShake extends Phaser.GameObjects.GameObject {
 
   private offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
 
-  constructor(scene: Phaser.Scene) {
+  constructor(public scene: Scene) {
     super(scene, 'Camera Shake');
 
     this.states = new States<ShakeStates, 'idle'>(scene, 'idle')

@@ -1,3 +1,4 @@
+import { Scene } from 'common/scene';
 import { CameraShake } from './camera_shake';
 import { States } from './states';
 
@@ -22,7 +23,7 @@ export class Camera extends Phaser.GameObjects.GameObject {
 
   private previousState: CameraStates = 'idle';
 
-  constructor(scene: Phaser.Scene) {
+  constructor(public scene: Scene) {
     super(scene, 'Camera Controller');
 
     this.addToUpdateList();

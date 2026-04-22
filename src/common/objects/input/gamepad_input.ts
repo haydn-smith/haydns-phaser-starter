@@ -1,4 +1,5 @@
 import { Inputtable } from 'common/contracts/inputtable';
+import { Scene } from 'common/scene';
 
 export const Gamepad = {
   One: 'One',
@@ -62,7 +63,7 @@ export class GamepadInput extends Phaser.GameObjects.GameObject implements Input
   private justPressedHasBeenFired: boolean = false;
 
   constructor(
-    scene: Phaser.Scene,
+    public scene: Scene,
     private button: TypeOfGamepadButton,
     private pad: TypeOfGamepad = Gamepad.One
   ) {

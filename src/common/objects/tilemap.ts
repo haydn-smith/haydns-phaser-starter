@@ -1,7 +1,7 @@
 import { rect } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
-import { Depth, Tileset, TypeOfTilemap } from 'constants';
+import { DEPTH, TILESET, TypeOfTilemap } from 'constants';
 import { Collision } from './collision';
 
 export class Tilemap extends Phaser.GameObjects.GameObject {
@@ -17,11 +17,11 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
     this.map = this.scene.add.tilemap(tilemap);
 
-    const tiles = this.map.addTilesetImage('debug', Tileset.Debug);
+    const tiles = this.map.addTilesetImage('debug', TILESET.Debug);
 
     if (tiles) {
-      this.map.createLayer('Background', tiles)?.setDepth(Depth.Background);
-      this.map.createLayer('Foreground', tiles)?.setDepth(Depth.Foreground);
+      this.map.createLayer('Background', tiles)?.setDepth(DEPTH.Background);
+      this.map.createLayer('Foreground', tiles)?.setDepth(DEPTH.Foreground);
     }
 
     this.map.layers.forEach((layer) => {

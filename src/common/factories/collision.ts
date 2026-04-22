@@ -1,6 +1,7 @@
 import { Collision } from 'common/objects/collision';
+import { Scene } from 'common/scene';
 
-export function collisionBorder(scene: Phaser.Scene, rect: Phaser.Geom.Rectangle): Collision[] {
+export function collisionBorder(scene: Scene, rect: Phaser.Geom.Rectangle): Collision[] {
   return [
     Collision.fromArea(scene, new Phaser.Geom.Rectangle(rect.x, rect.y, rect.width, 1)),
     Collision.fromArea(scene, new Phaser.Geom.Rectangle(rect.x, rect.y + rect.height, rect.width, 1)),
@@ -9,6 +10,6 @@ export function collisionBorder(scene: Phaser.Scene, rect: Phaser.Geom.Rectangle
   ];
 }
 
-export function collision(scene: Phaser.Scene, rect: Phaser.Geom.Rectangle) {
+export function collision(scene: Scene, rect: Phaser.Geom.Rectangle) {
   return Collision.fromArea(scene, rect);
 }

@@ -6,7 +6,7 @@ import { Input } from 'common/objects/input/input';
 import { Player } from 'common/objects/player';
 import { SpatialAudio } from 'common/objects/spatial_audio';
 import { Scene } from 'common/scene';
-import { Action, Depth, SCENE, Sound } from 'constants';
+import { ACTION, DEPTH, SCENE, SOUND } from 'constants';
 
 export class Debug extends Scene {
   private player: Phaser.GameObjects.Container;
@@ -27,7 +27,7 @@ export class Debug extends Scene {
     const map = debugMap(this);
 
     this.player = new Player(this)
-      .setDepth(Depth.Main)
+      .setDepth(DEPTH.Main)
       .setPosition(map.getPoint('Player Start').x, map.getPoint('Player Start').y);
 
     this.add.existing(this.player);
@@ -36,9 +36,9 @@ export class Debug extends Scene {
 
     this.camera = this.add.existing(new Camera(this).follow(this.player));
 
-    this.activate = new Audio(this, Sound.Activate).dontLoop().withVolume(0.7);
+    this.activate = new Audio(this, SOUND.Activate).dontLoop().withVolume(0.7);
 
-    this.music = new SpatialAudio(this, Sound.Music)
+    this.music = new SpatialAudio(this, SOUND.Music)
       .loop()
       .setVolume(0.5)
       .withPosition(this.player)
@@ -47,7 +47,7 @@ export class Debug extends Scene {
   }
 
   update() {
-    if (this.inputs.isJustPressed(Action.Action)) {
+    if (this.inputs.isJustPressed(ACTION.Action)) {
       this.camera.zoom(Math.random() + 1, 2000);
 
       this.activate.play();

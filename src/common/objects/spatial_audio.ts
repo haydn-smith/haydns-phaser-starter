@@ -1,6 +1,6 @@
 import { Scene } from 'common/scene';
 import { clamp, normalize } from 'common/utils/math';
-import { Depth } from 'constants';
+import { DEPTH } from 'constants';
 
 export class SpatialAudio extends Phaser.GameObjects.Container {
   private sound: Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.NoAudioSound;
@@ -24,7 +24,7 @@ export class SpatialAudio extends Phaser.GameObjects.Container {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
 
     if (this.scene.app().isDebug()) {
-      this.graphics.setDepth(Depth.Debug).fillStyle(0xff0000, 1).fillPoint(d.translateX, d.translateY, 2);
+      this.graphics.setDepth(DEPTH.Debug).fillStyle(0xff0000, 1).fillPoint(d.translateX, d.translateY, 2);
     }
 
     if (!this.sound.isPlaying) {

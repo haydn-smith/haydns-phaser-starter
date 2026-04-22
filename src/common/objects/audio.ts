@@ -1,7 +1,9 @@
+import { Scene } from "common/scene";
+
 export class Audio extends Phaser.GameObjects.GameObject {
   private sound: Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.NoAudioSound;
 
-  constructor(scene: Phaser.Scene, key: string) {
+  constructor(public scene: Scene, key: string) {
     super(scene, 'audio');
 
     this.renderFlags = 0;

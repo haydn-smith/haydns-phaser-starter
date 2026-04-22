@@ -1,6 +1,7 @@
 import { directionalInputs } from 'common/factories/input';
 import { rect } from 'common/factories/phaser';
-import { Action, Animation, CollisionTag, Sprite } from 'constants';
+import { Scene } from 'common/scene';
+import { ACTION, ANIMATION, COLLISION_TAG, SPRITE } from 'constants';
 import { Collision } from './collision';
 import { Input } from './input/input';
 import { Movement, velocityMovement } from './movement';
@@ -12,10 +13,10 @@ export class Player extends Phaser.GameObjects.Container {
 
   private inputs: Input;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(public scene: Scene) {
     super(scene);
 
-    this.collision = Collision.fromArea(this.scene, rect(-4, -4, 8, 8)).setTag(CollisionTag.Player);
+    this.collision = Collision.fromArea(this.scene, rect(-4, -4, 8, 8)).setTag(COLLISION_TAG.Player);
 
     this.movement = new Movement(this.scene, this, this.collision)
       .addToUpdateList()
@@ -31,13 +32,13 @@ export class Player extends Phaser.GameObjects.Container {
 
     this.add(this.collision);
 
-    this.add(this.scene.add.sprite(0, 0, Sprite.DebugPlayer).play(Animation.DebugPlayer));
+    this.add(this.scene.add.sprite(0, 0, SPRITE.DebugPlayer).play(ANIMATION.DebugPlayer));
   }
 
   public preUpdate(_time: number, delta: number) {
-    const x = this.inputs.isPressed(Action.Right) - this.inputs.isPressed(Action.Left);
+    const x = this.inputs.isPressed(ACTION.Right) - this.inputs.isPressed(ACTION.Left);
 
-    const y = this.inputs.isPressed(Action.Down) - this.inputs.isPressed(Action.Up);
+    const y = this.inputs.isPressed(ACTION.Down) - this.inputs.isPressed(ACTION.Up);
 
     this.movement.moveInDirection(new Phaser.Math.Vector2(x, y), delta);
   }

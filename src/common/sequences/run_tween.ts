@@ -1,4 +1,5 @@
 import { Sequenceable } from 'common/contracts/sequenceable';
+import { Scene } from 'common/scene';
 
 export class RunTween implements Sequenceable {
   private isStarted = false;
@@ -7,7 +8,7 @@ export class RunTween implements Sequenceable {
 
   private tween;
 
-  constructor(scene: Phaser.Scene, config: Phaser.Types.Tweens.TweenChainBuilderConfig) {
+  constructor(public scene: Scene, config: Phaser.Types.Tweens.TweenChainBuilderConfig) {
     config = {
       ...config,
       paused: true,

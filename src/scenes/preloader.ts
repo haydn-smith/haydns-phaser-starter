@@ -1,5 +1,5 @@
 import { Scene } from 'common/scene';
-import { Animation, Font, SCENE, Sound, Sprite, Tilemap, Tileset } from 'constants';
+import { ANIMATION, FONT, SCENE, SOUND, SPRITE, TILEMAP, TILESET } from 'constants';
 
 export class Preloader extends Scene {
   constructor() {
@@ -37,39 +37,41 @@ export class Preloader extends Scene {
     this.load.setPath('assets');
 
     // Fonts.
-    this.load.bitmapFont(Font.DefaultWhite, Font.DefaultWhite, Font.DefaultXml);
-    this.load.bitmapFont(Font.DefaultBlack, Font.DefaultBlack, Font.DefaultXml);
+    this.load.bitmapFont(FONT.DefaultWhite, FONT.DefaultWhite, FONT.DefaultXml);
+    this.load.bitmapFont(FONT.DefaultBlack, FONT.DefaultBlack, FONT.DefaultXml);
+    this.load.bitmapFont(FONT.SourGummyWhite, FONT.SourGummyWhite, FONT.SourGummyXml);
+    this.load.bitmapFont(FONT.SourGummyBlack, FONT.SourGummyBlack, FONT.SourGummyXml);
 
     // Tilemaps.
-    this.load.image(Tileset.Debug, Tileset.Debug);
-    this.load.tilemapTiledJSON(Tilemap.Debug, Tilemap.Debug);
+    this.load.image(TILESET.Debug, TILESET.Debug);
+    this.load.tilemapTiledJSON(TILEMAP.Debug, TILEMAP.Debug);
 
     // Sprites.
-    this.load.image(Sprite.Black1px, Sprite.Black1px);
-    this.load.image(Sprite.White1px, Sprite.White1px);
-    this.load.spritesheet(Sprite.DebugPlayer, Sprite.DebugPlayer, {
+    this.load.image(SPRITE.Black1px, SPRITE.Black1px);
+    this.load.image(SPRITE.White1px, SPRITE.White1px);
+    this.load.spritesheet(SPRITE.DebugPlayer, SPRITE.DebugPlayer, {
       frameWidth: 16,
     });
-    this.load.spritesheet(Sprite.ZButton, Sprite.ZButton, {
+    this.load.spritesheet(SPRITE.ZButton, SPRITE.ZButton, {
       frameWidth: 16,
     });
 
     // Audio.
-    this.load.audio(Sound.Activate, Sound.Activate);
-    this.load.audio(Sound.Music, Sound.Music);
+    this.load.audio(SOUND.Activate, SOUND.Activate);
+    this.load.audio(SOUND.Music, SOUND.Music);
   }
 
   create() {
     // Register global animations.
     this.anims.create({
-      key: Animation.DebugPlayer,
-      frames: Sprite.DebugPlayer,
+      key: ANIMATION.DebugPlayer,
+      frames: SPRITE.DebugPlayer,
       frameRate: 3,
       repeat: -1,
     });
     this.anims.create({
-      key: Animation.ZButton,
-      frames: Sprite.ZButton,
+      key: ANIMATION.ZButton,
+      frames: SPRITE.ZButton,
       frameRate: 2,
       repeat: -1,
     });

@@ -1,3 +1,5 @@
+import { Scene } from "common/scene";
+
 export type StateFn<T> = ({
   delta,
   change,
@@ -14,7 +16,7 @@ export class States<T extends string, U extends T> extends Phaser.GameObjects.Ga
 
   private timeInState = 0;
 
-  constructor(scene: Phaser.Scene, initialState: U) {
+  constructor(public scene: Scene, initialState: U) {
     super(scene, 'States');
 
     this.renderFlags = 0;

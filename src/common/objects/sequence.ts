@@ -1,8 +1,9 @@
 import { Sequenceable } from 'common/contracts/sequenceable';
+import { Scene } from 'common/scene';
 
 export class Sequence extends Phaser.GameObjects.GameObject {
   constructor(
-    scene: Phaser.Scene,
+    public scene: Scene,
     private sequenceables: Sequenceable[] = [],
     private currentSequenceable: number = 0,
     private shouldProcess: boolean = false,

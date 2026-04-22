@@ -1,5 +1,7 @@
+import { Scene } from "common/scene";
+
 export class YSortObjects extends Phaser.GameObjects.Container {
-  constructor(scene: Phaser.Scene) {
+  constructor(public scene: Scene) {
     super(scene);
 
     this.addToUpdateList();

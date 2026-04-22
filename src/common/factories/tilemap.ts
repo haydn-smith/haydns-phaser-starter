@@ -1,6 +1,7 @@
 import { Tilemap as TilemapObject } from 'common/objects/tilemap';
-import { Tilemap } from 'constants';
+import { Scene } from 'common/scene';
+import { TILEMAP } from 'constants';
 
-export function debugMap(scene: Phaser.Scene) {
-  return new TilemapObject(scene, Tilemap.Debug);
+export function debugMap(scene: Scene) {
+  return new TilemapObject(scene, TILEMAP.Debug);
 }
