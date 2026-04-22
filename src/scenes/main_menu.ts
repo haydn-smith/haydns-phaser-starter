@@ -39,7 +39,13 @@ export class MainMenu extends Scene {
       .setInterpolation(Phaser.Textures.FilterMode.NEAREST);
 
     this.add
-      .existing(new Typewriter(this, FONT.SourGummyBlack, 32, 48))
+      .existing(
+        new Typewriter(this, {
+          font: FONT.SourGummyBlack,
+          fontHeight: 32,
+          fontSize: 48,
+        })
+      )
       .setDepth(DEPTH.UI)
       .setScrollFactor(0)
       .write(`This is a test.`)

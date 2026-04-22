@@ -2,28 +2,51 @@ import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
 import { ANIMATION, FONT, TypeOfFont } from 'constants';
 
+interface TypewriterConfig {
+  font?: TypeOfFont;
+  fontHeight?: number;
+  fontSize?: number;
+  lineHeight?: number;
+  characterAnimationDuration?: number;
+  characterAnimationDelay?: number;
+  characterAnimationOffset?: number;
+}
+
 export class Typewriter extends Phaser.GameObjects.Container {
   private textObjects: (Phaser.GameObjects.BitmapText | Phaser.GameObjects.Sprite)[] = [];
-
   private textWidth = 0;
-
   private textHeight = 0;
-
   private typeFrom = 0;
-
   private filter: Phaser.Textures.FilterMode = Phaser.Textures.FilterMode.LINEAR;
+  private font: TypeOfFont;
+  private fontHeight: number;
+  private fontSize: number;
+  private lineHeight: number;
+  private characterAnimationDuration: number;
+  private characterAnimationDelay: number;
+  private characterAnimationOffset: number;
 
   constructor(
     public scene: Scene,
-    private font: TypeOfFont = FONT.DefaultWhite,
-    private fontHeight: number = 7,
-    private fontSize: number = 14,
-    private lineHeight: number = 2,
-    private characterAnimationDuration: number = 250,
-    private characterAnimationDelay: number = 30,
-    private characterAnimationOffset: number = 1.5
+    {
+      font = FONT.DefaultWhite,
+      fontHeight = 7,
+      fontSize = 14,
+      lineHeight = 2,
+      characterAnimationDuration = 250,
+      characterAnimationDelay = 30,
+      characterAnimationOffset = 1.5,
+    }: TypewriterConfig = {}
   ) {
     super(scene);
+
+    this.font = font;
+    this.fontHeight = fontHeight;
+    this.fontSize = fontSize;
+    this.lineHeight = lineHeight;
+    this.characterAnimationDuration = characterAnimationDuration;
+    this.characterAnimationDelay = characterAnimationDelay;
+    this.characterAnimationOffset = characterAnimationOffset;
   }
 
   public setInterpolation(filter: Phaser.Textures.FilterMode): this {
