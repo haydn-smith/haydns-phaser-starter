@@ -14,6 +14,10 @@ export const randomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 
+export const randomFloat = (min: number, max: number) => {
+  return Math.random() * (max - min) + min;
+};
+
 export const sameSign = (x: number, y: number): boolean => {
   return Boolean(Number(x >= 0) ^ Number(y < 0));
 };

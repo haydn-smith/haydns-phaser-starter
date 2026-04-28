@@ -13,6 +13,14 @@ export class Scene extends Phaser.Scene {
     return this.renderer.width;
   }
 
+  public halfHeight() {
+    return this.renderer.height / 2;
+  }
+
+  public halfWidth() {
+    return this.renderer.width / 2;
+  }
+
   public app() {
     return this.game as Game;
   }

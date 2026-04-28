@@ -21,7 +21,7 @@ export class CameraShake extends Phaser.GameObjects.GameObject {
   constructor(public scene: Scene) {
     super(scene, 'Camera Shake');
 
-    this.states = new States<ShakeStates, 'idle'>(scene, 'idle')
+    this.states = this.scene.add.existing(new States<ShakeStates, 'idle'>(scene, 'idle')
       .add('create tween', ({ change, delta }) => {
         this.time += delta;
 
@@ -47,10 +47,14 @@ export class CameraShake extends Phaser.GameObjects.GameObject {
         this.amount = Math.max(0, this.amount - this.falloff * this.time * 0.001);
 
         change(this.time > this.duration && this.duration !== -1 ? 'idle' : 'create tween');
-      });
+      }));
+
+    this.on('destroy', () => {
+      this.states.destroy();
+    });
   }
 
-  public shake(amount = 16, falloff = 16, duration = 1000, speed = 10) {
+  shake(amount = 16, falloff = 16, duration = 1000, speed = 10) {
     this.amount = amount;
     this.falloff = falloff;
     this.duration = duration;
@@ -58,9 +62,11 @@ export class CameraShake extends Phaser.GameObjects.GameObject {
     this.time = 0;
 
     this.states.change('create tween');
+
+    return this;
   }
 
-  public shakeOffset(): Phaser.Math.Vector2 {
+  shakeOffset() {
     return this.offset;
   }
 }

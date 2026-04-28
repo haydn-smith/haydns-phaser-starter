@@ -4,6 +4,7 @@ import 'phaser';
 
 import { Boot } from 'scenes/boot';
 import { Debug } from 'scenes/debug';
+import { CameraExample } from 'scenes/examples/camera_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
 import { MainMenu } from 'scenes/main_menu';
 import { Preloader } from 'scenes/preloader';
@@ -53,6 +54,7 @@ const config: Phaser.Types.Core.GameConfig = {
     MainMenu,
     Debug,
     TypewriterExample,
+    CameraExample,
   ],
 };
 

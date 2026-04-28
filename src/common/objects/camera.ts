@@ -1,8 +1,10 @@
 import { Scene } from 'common/scene';
+import { logWarn } from 'common/utils/log';
+import { worldPosition } from 'common/utils/worldPosition';
 import { CameraShake } from './camera_shake';
 import { States } from './states';
 
-type CameraStates = 'following' | 'idle' | 'static';
+type CameraStates = 'following' | 'free';
 
 export class Camera extends Phaser.GameObjects.GameObject {
   private camera: Phaser.Cameras.Scene2D.Camera;
@@ -11,95 +13,107 @@ export class Camera extends Phaser.GameObjects.GameObject {
 
   private targetOffset = Phaser.Math.Vector2.ZERO;
 
-  private states: States<CameraStates, 'idle'>;
+  private states: States<CameraStates, 'free'>;
 
   private isFollowPaused = false;
 
   private position: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
 
-  private staticTarget: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
-
   private shaker: CameraShake;
-
-  private previousState: CameraStates = 'idle';
 
   constructor(public scene: Scene) {
     super(scene, 'Camera Controller');
 
-    this.addToUpdateList();
-
     this.camera = scene.cameras.main;
-    this.camera.setScene(scene);
-    this.camera.roundPixels = true;
+    this.camera.setScene(scene).setOrigin(0.5, 0.5);
 
     this.shaker = new CameraShake(scene);
 
-    this.states = new States<CameraStates, 'idle'>(scene, 'idle')
-      .add('following', ({ delta }) => {
+    this.states = this.scene.add.existing(
+      new States<CameraStates, 'free'>(scene, 'free').add('following', ({ delta }) => {
         if (this.isFollowPaused || !this.target) return;
 
-        const d = this.target.getWorldTransformMatrix().decomposeMatrix();
+        const target = worldPosition(this.target).add(this.targetOffset);
 
-        const target = new Phaser.Math.Vector2(d.translateX, d.translateY).add(this.targetOffset);
-
-        const lerp = new Phaser.Math.Vector2(this.position.x, this.position.y).lerp(target, 2 * delta * 0.001);
-
-        this.position = new Phaser.Math.Vector2(lerp.x, lerp.y);
+        this.position = this.position.clone().lerp(target, 2 * delta * 0.001);
       })
-      .add('static', ({ delta }) => {
-        if (!this.staticTarget) return;
+    );
 
-        const lerp = new Phaser.Math.Vector2(this.position.x, this.position.y).lerp(
-          this.staticTarget,
-          2 * delta * 0.001
-        );
-
-        this.position = new Phaser.Math.Vector2(lerp.x, lerp.y);
-      });
+    this.on('destroy', () => {
+      this.states.destroy();
+      this.shaker.destroy();
+    });
   }
 
-  public preUpdate() {
+  preUpdate() {
     this.camera.setScroll(
-      Math.floor(this.position.x + this.shaker.shakeOffset().x - this.scene.renderer.width / 2),
-      Math.floor(this.position.y + this.shaker.shakeOffset().y - this.scene.renderer.height / 2)
+      this.position.x - this.scene.halfWidth() + this.shaker.shakeOffset().x,
+      this.position.y - this.scene.halfHeight() + this.shaker.shakeOffset().y
     );
   }
 
-  public follow(target: Phaser.GameObjects.Container, targetOffset = Phaser.Math.Vector2.ZERO): Camera {
+  isFollowing() {
+    return this.states.current() === 'following';
+  }
+
+  follow(
+    target: Phaser.GameObjects.Container,
+    { targetOffset = Phaser.Math.Vector2.ZERO, snapToTarget = true }
+  ) {
     this.target = target;
 
     this.targetOffset = targetOffset;
 
-    this.position = new Phaser.Math.Vector2(target.x + targetOffset.x, target.y + targetOffset.y);
+    if (snapToTarget) {
+      this.position = new Phaser.Math.Vector2(target.x + targetOffset.x, target.y + targetOffset.y);
+    }
 
     this.states.change('following');
 
     return this;
   }
 
-  public pauseFollow(): Camera {
-    this.states.change('idle');
+  pauseFollow() {
+    if (!this.target) {
+      logWarn('No target to pause following.');
+
+      return this;
+    }
+
+    this.states.change('free');
 
     return this;
   }
 
-  public resumeFollow(): Camera {
+  resumeFollow() {
+    if (!this.target) {
+      logWarn('No target to resume following.');
+
+      return this;
+    }
+
     this.states.change('following');
 
     return this;
   }
 
-  public unfollow(): Camera {
-    this.states.change('idle');
+  unfollow() {
+    this.states.change('free');
 
     this.target = undefined;
 
     return this;
   }
 
-  public move(position: Phaser.Math.Vector2, duration = 1000): Camera {
+  move(position: Phaser.Math.Vector2, duration = 0) {
     if (this.target) {
       this.pauseFollow();
+    }
+
+    if (duration === 0) {
+      this.position = position;
+
+      return this;
     }
 
     this.scene.tweens.add({
@@ -115,7 +129,7 @@ export class Camera extends Phaser.GameObjects.GameObject {
     return this;
   }
 
-  public zoom(to: number, duration = 800): Camera {
+  zoom(to: number, duration = 0) {
     if (to === 0) return this;
 
     if (duration === 0) {
@@ -137,34 +151,8 @@ export class Camera extends Phaser.GameObjects.GameObject {
     return this;
   }
 
-  public shake(amount = 16, falloff = 16, duration = 1000, speed = 10): Camera {
+  shake(amount = 16, falloff = 16, duration = 1000, speed = 10) {
     this.shaker.shake(amount, falloff, duration, speed);
-
-    return this;
-  }
-
-  public getPhaserCamera(): Phaser.Cameras.Scene2D.Camera {
-    return this.camera;
-  }
-
-  public static(target: Phaser.Math.Vector2): Camera {
-    this.states.change('static');
-
-    this.staticTarget = target;
-
-    return this;
-  }
-
-  public pause(): Camera {
-    this.previousState = this.states.current();
-
-    this.states.change('idle');
-
-    return this;
-  }
-
-  public resume(): Camera {
-    this.states.change(this.previousState);
 
     return this;
   }

@@ -80,4 +80,12 @@ export class Game extends Phaser.Game {
 
     return this;
   }
+
+  public controlCallback(name: string, fn: () => void) {
+    this.gui ??= new GUI();
+
+    this.gui.add({ fn }, `fn`).name(name);
+
+    return this;
+  }
 }
