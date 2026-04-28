@@ -27,7 +27,7 @@ export class Camera extends Phaser.GameObjects.GameObject {
     this.camera = scene.cameras.main;
     this.camera.setScene(scene).setOrigin(0.5, 0.5);
 
-    this.shaker = new CameraShake(scene);
+    this.shaker = this.scene.add.existing(new CameraShake(scene));
 
     this.states = this.scene.add.existing(
       new States<CameraStates, 'free'>(scene, 'free').add('following', ({ delta }) => {
@@ -56,10 +56,7 @@ export class Camera extends Phaser.GameObjects.GameObject {
     return this.states.current() === 'following';
   }
 
-  follow(
-    target: Phaser.GameObjects.Container,
-    { targetOffset = Phaser.Math.Vector2.ZERO, snapToTarget = true }
-  ) {
+  follow(target: Phaser.GameObjects.Container, { targetOffset = Phaser.Math.Vector2.ZERO, snapToTarget = true }) {
     this.target = target;
 
     this.targetOffset = targetOffset;
