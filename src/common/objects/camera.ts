@@ -1,8 +1,8 @@
 import { Scene } from 'common/scene';
 import { logWarn } from 'common/utils/log';
+import { States } from 'common/utils/states';
 import { worldPosition } from 'common/utils/worldPosition';
 import { CameraShake } from './camera_shake';
-import { States } from './states';
 
 type CameraStates = 'following' | 'free';
 
@@ -22,30 +22,31 @@ export class Camera extends Phaser.GameObjects.GameObject {
   private shaker: CameraShake;
 
   constructor(public scene: Scene) {
-    super(scene, 'Camera Controller');
+    super(scene, 'Camera');
 
     this.camera = scene.cameras.main;
     this.camera.setScene(scene).setOrigin(0.5, 0.5);
 
-    this.shaker = this.scene.add.existing(new CameraShake(scene));
+    this.shaker = new CameraShake(scene);
 
-    this.states = this.scene.add.existing(
-      new States<CameraStates, 'free'>(scene, 'free').add('following', ({ delta }) => {
-        if (this.isFollowPaused || !this.target) return;
+    this.states = new States<CameraStates, 'free'>(scene, 'free').add('following', ({ delta }) => {
+      if (this.isFollowPaused || !this.target) return;
 
-        const target = worldPosition(this.target).add(this.targetOffset);
+      const target = worldPosition(this.target).add(this.targetOffset);
 
-        this.position = this.position.clone().lerp(target, 2 * delta * 0.001);
-      })
-    );
+      this.position = this.position.clone().lerp(target, 2 * delta * 0.001);
+    });
 
     this.on('destroy', () => {
-      this.states.destroy();
       this.shaker.destroy();
     });
   }
 
-  preUpdate() {
+  preUpdate(_: number, delta: number) {
+    this.scene.add.existing(this.shaker);
+
+    this.states.step(delta);
+
     this.camera.setScroll(
       this.position.x - this.scene.halfWidth() + this.shaker.shakeOffset().x,
       this.position.y - this.scene.halfHeight() + this.shaker.shakeOffset().y
@@ -56,7 +57,7 @@ export class Camera extends Phaser.GameObjects.GameObject {
     return this.states.current() === 'following';
   }
 
-  follow(target: Phaser.GameObjects.Container, { targetOffset = Phaser.Math.Vector2.ZERO, snapToTarget = true }) {
+  follow(target: Phaser.GameObjects.Container, { targetOffset = Phaser.Math.Vector2.ZERO, snapToTarget = true } = {}) {
     this.target = target;
 
     this.targetOffset = targetOffset;
