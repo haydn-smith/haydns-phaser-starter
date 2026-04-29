@@ -1,9 +1,9 @@
 import { vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { clamp, normalize } from 'common/utils/math';
+import { States } from 'common/utils/states';
 import { DEPTH } from 'constants';
 import { Collision } from './collision';
-import { States } from 'common/utils/states';
 
 type MovementStates = 'idle' | 'moveToTarget';
 

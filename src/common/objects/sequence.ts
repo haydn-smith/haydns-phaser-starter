@@ -2,20 +2,25 @@ import { Sequenceable } from 'common/contracts/sequenceable';
 import { Scene } from 'common/scene';
 
 export class Sequence extends Phaser.GameObjects.GameObject {
+  private currentSequenceable: number = 0;
+  private shouldProcess: boolean = false;
+  private shouldRepeat: boolean = false;
+  private shouldDestroyWhenComplete: boolean = false;
+
   constructor(
     public scene: Scene,
-    private sequenceables: Sequenceable[] = [],
-    private currentSequenceable: number = 0,
-    private shouldProcess: boolean = false,
-    private shouldRepeat: boolean = false,
-    private shouldDestroyWhenComplete: boolean = false
+    private sequenceables: Sequenceable[] = []
   ) {
     super(scene, 'Sequenceable');
 
     this.renderFlags = 0;
+
+    this.on('destroy', () => {
+      this.sequenceables.filter((s) => s instanceof Phaser.GameObjects.GameObject).forEach((s) => s.destroy());
+    });
   }
 
-  public preUpdate(_time: number, delta: number) {
+  preUpdate(_: number, delta: number) {
     if (this.isComplete() && this.shouldRepeat) {
       this.reset();
     }
@@ -35,7 +40,7 @@ export class Sequence extends Phaser.GameObjects.GameObject {
     }
   }
 
-  public isComplete(): boolean {
+  isComplete() {
     return (
       this.sequenceables.length === 0 ||
       (this.currentSequenceable === this.sequenceables.length - 1 &&
@@ -43,31 +48,31 @@ export class Sequence extends Phaser.GameObjects.GameObject {
     );
   }
 
-  public start(): Sequence {
+  start() {
     this.shouldProcess = true;
 
     return this;
   }
 
-  public stop(): Sequence {
+  stop() {
     this.shouldProcess = false;
 
     return this;
   }
 
-  public destroyWhenComplete(): Sequence {
+  destroyWhenComplete() {
     this.shouldDestroyWhenComplete = true;
 
     return this;
   }
 
-  public repeat(): Sequence {
+  repeat() {
     this.shouldRepeat = true;
 
     return this;
   }
 
-  public reset(): Sequence {
+  reset() {
     this.currentSequenceable = 0;
 
     this.sequenceables.forEach((s) => s.reset());
@@ -75,19 +80,13 @@ export class Sequence extends Phaser.GameObjects.GameObject {
     return this;
   }
 
-  public isRunning(): boolean {
+  isRunning() {
     return this.shouldProcess && !this.isComplete();
   }
 
-  public setSequenables(sequenceables: Sequenceable[]): Sequence {
+  setSequenables(sequenceables: Sequenceable[]) {
     this.sequenceables = sequenceables;
 
     return this;
-  }
-
-  public destroy(): void {
-    this.sequenceables.forEach((s) => ('destroy' in s && typeof s.destroy === 'function' ? s.destroy() : undefined));
-
-    super.destroy();
   }
 }
