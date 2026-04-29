@@ -3,7 +3,7 @@ import { Scene } from 'common/scene';
 import { clamp, normalize } from 'common/utils/math';
 import { DEPTH } from 'constants';
 import { Collision } from './collision';
-import { States } from './states';
+import { States } from 'common/utils/states';
 
 type MovementStates = 'idle' | 'moveToTarget';
 
@@ -121,6 +121,8 @@ export class Movement extends Phaser.GameObjects.GameObject {
   }
 
   public preUpdate(_: number, delta: number) {
+    this.states.step(delta);
+
     if (this.scene.app().isDebug()) {
       const d = this.actor.getWorldTransformMatrix().decomposeMatrix();
 
@@ -160,7 +162,6 @@ export class Movement extends Phaser.GameObjects.GameObject {
   public destroy() {
     super.destroy();
     this.graphics.destroy();
-    this.states.destroy();
   }
 
   public moveInDirection(direction: Phaser.Math.Vector2, delta: number, crossZero = true): Movement {
