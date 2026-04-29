@@ -58,9 +58,9 @@ export type KeyOfGamepadStickAxis = keyof typeof GamepadStickAxis;
 export type TypeOfGamepadStickAxis = (typeof GamepadStickAxis)[KeyOfGamepadStickAxis];
 
 export class GamepadInput extends Phaser.GameObjects.GameObject implements Inputtable {
-  private justPressed: boolean = false;
+  private justPressed = false;
 
-  private justPressedHasBeenFired: boolean = false;
+  private justPressedHasBeenFired = false;
 
   constructor(
     public scene: Scene,
@@ -70,7 +70,7 @@ export class GamepadInput extends Phaser.GameObjects.GameObject implements Input
     super(scene, 'Gamepad Input');
   }
 
-  public isPressed(): number {
+  isPressed() {
     const gamepad = this.getGamepad(this.pad);
 
     if (!gamepad) {
@@ -114,11 +114,11 @@ export class GamepadInput extends Phaser.GameObjects.GameObject implements Input
     }
   }
 
-  public isJustPressed(): boolean {
+  isJustPressed() {
     return this.justPressed;
   }
 
-  public preUpdate() {
+  preUpdate() {
     if (this.isPressed() && !this.justPressed && !this.justPressedHasBeenFired) {
       this.justPressed = true;
       this.justPressedHasBeenFired = true;
@@ -131,7 +131,7 @@ export class GamepadInput extends Phaser.GameObjects.GameObject implements Input
     }
   }
 
-  private getGamepadStickVector(pad: TypeOfGamepad, stick: TypeOfGamepadStick): { x: number; y: number } {
+  private getGamepadStickVector(pad: TypeOfGamepad, stick: TypeOfGamepadStick) {
     const gamepad = this.getGamepad(pad);
 
     const vector = {
@@ -150,7 +150,7 @@ export class GamepadInput extends Phaser.GameObjects.GameObject implements Input
     return vector;
   }
 
-  private getGamepad(pad: TypeOfGamepad): Phaser.Input.Gamepad.Gamepad | undefined {
+  private getGamepad(pad: TypeOfGamepad) {
     if (pad === Gamepad.One) {
       return this.scene.input.gamepad?.pad1;
     } else if (pad === Gamepad.Two) {

@@ -1,16 +1,17 @@
 import { Sequenceable } from 'common/contracts/sequenceable';
 import { Input } from 'common/objects/input/input';
+import { TypeOfAction } from 'constants';
 
 export class WaitForInput implements Sequenceable {
   private isInputPressed = false;
 
   constructor(
     private inputs: Input,
-    private key: string
+    private action: TypeOfAction
   ) {}
 
   public update() {
-    if (this.inputs.isJustPressed(this.key)) {
+    if (this.inputs.isJustPressed(this.action)) {
       this.isInputPressed = true;
     }
   }

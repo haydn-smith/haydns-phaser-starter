@@ -1,31 +1,35 @@
 import { Inputtable } from 'common/contracts/inputtable';
 import { Scene } from 'common/scene';
 
+export type TypeOfKeyCode = (typeof Phaser.Input.Keyboard.KeyCodes)[keyof typeof Phaser.Input.Keyboard.KeyCodes];
+
 export class KeyboardInput extends Phaser.GameObjects.GameObject implements Inputtable {
   private key?: Phaser.Input.Keyboard.Key;
 
-  private justPressed: boolean = false;
+  private justPressed = false;
 
-  private justPressedHasBeenFired: boolean = false;
+  private justPressedHasBeenFired = false;
 
   constructor(
     public scene: Scene,
-    key: string | number
+    key: TypeOfKeyCode
   ) {
     super(scene, 'Keyboard Input');
 
-    this.key = this.scene.input.keyboard?.addKey(key);
+    if (scene.input.keyboard) {
+      this.key = this.scene.app().registerKeyboardKey(scene.input.keyboard, Number(key));
+    }
   }
 
-  public isPressed(): number {
+  isPressed() {
     return this.key?.isDown ? 1 : 0;
   }
 
-  public isJustPressed(): boolean {
+  isJustPressed() {
     return this.justPressed;
   }
 
-  public preUpdate() {
+  preUpdate() {
     if (this.key?.isDown && !this.justPressed && !this.justPressedHasBeenFired) {
       this.justPressed = true;
       this.justPressedHasBeenFired = true;

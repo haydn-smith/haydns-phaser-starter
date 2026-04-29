@@ -24,6 +24,8 @@ export class Camera extends Phaser.GameObjects.GameObject {
   constructor(public scene: Scene) {
     super(scene, 'Camera');
 
+    this.renderFlags = 0;
+
     this.camera = scene.cameras.main;
     this.camera.setScene(scene).setOrigin(0.5, 0.5);
 

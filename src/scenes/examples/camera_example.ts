@@ -3,7 +3,6 @@ import { Camera } from 'common/objects/camera';
 import { Sequence } from 'common/objects/sequence';
 import { Scene } from 'common/scene';
 import { RunTween } from 'common/sequences/run_tween';
-import { getAllChildren } from 'common/utils/getAllChildren';
 import { randomFloat, randomInt } from 'common/utils/math';
 
 export class CameraExample extends Scene {
@@ -108,6 +107,6 @@ export class CameraExample extends Scene {
   update() {
     // Allows us to see the objects in the scene as the ca,era is created
     // and destroyed.
-    console.log(getAllChildren(this).map((o) => o.type));
+    console.log(this.allChildren().map((o) => o.type));
   }
 }

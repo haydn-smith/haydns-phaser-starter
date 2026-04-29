@@ -21,6 +21,8 @@ export class CameraShake extends Phaser.GameObjects.GameObject {
   constructor(public scene: Scene) {
     super(scene, 'Camera Shake');
 
+    this.renderFlags = 0;
+
     this.states = new States<ShakeStates, 'idle'>(scene, 'idle')
       .add('create tween', ({ change, delta }) => {
         this.time += delta;

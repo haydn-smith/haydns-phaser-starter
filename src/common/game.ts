@@ -1,5 +1,6 @@
 import { TypeOfFlag } from 'constants';
 import { GUI } from 'lil-gui';
+import { TypeOfKeyCode } from './objects/input/keyboard_input';
 import { logEvent } from './utils/log';
 
 export class Game extends Phaser.Game {
@@ -9,17 +10,19 @@ export class Game extends Phaser.Game {
 
   private gui?: GUI;
 
+  private keys: Record<number, Phaser.Input.Keyboard.Key> = {};
+
   constructor(config?: Phaser.Types.Core.GameConfig & { debug: true }) {
     super(config);
 
     this.debug = config?.debug ?? false;
   }
 
-  public checkFlag(flag: TypeOfFlag): boolean {
+  checkFlag(flag: TypeOfFlag): boolean {
     return this.flags[flag] ?? false;
   }
 
-  public setFlag(flag: TypeOfFlag) {
+  setFlag(flag: TypeOfFlag) {
     if (this.checkFlag(flag)) return;
 
     logEvent('Setting flag.', flag);
@@ -29,7 +32,7 @@ export class Game extends Phaser.Game {
     return this;
   }
 
-  public unsetFlag(flag: TypeOfFlag) {
+  unsetFlag(flag: TypeOfFlag) {
     if (!this.checkFlag(flag)) return;
 
     logEvent('Un-setting flag.', flag);
@@ -39,17 +42,17 @@ export class Game extends Phaser.Game {
     return this;
   }
 
-  public setDebug(debug: boolean = true) {
+  setDebug(debug: boolean = true) {
     logEvent('Setting debug.', debug);
 
     this.debug = debug;
   }
 
-  public isDebug() {
+  isDebug() {
     return this.debug;
   }
 
-  public controlNumber<T>(name: string, object: T, property: keyof T, min?: number, max?: number, step?: number) {
+  controlNumber<T>(name: string, object: T, property: keyof T, min?: number, max?: number, step?: number) {
     this.gui ??= new GUI();
 
     this.gui.add(object, property, min, max, step).name(name);
@@ -57,7 +60,7 @@ export class Game extends Phaser.Game {
     return this;
   }
 
-  public controlBoolean<T>(name: string, object: T, property: keyof T) {
+  controlBoolean<T>(name: string, object: T, property: keyof T) {
     this.gui ??= new GUI();
 
     this.gui.add(object, property).name(name);
@@ -65,7 +68,7 @@ export class Game extends Phaser.Game {
     return this;
   }
 
-  public controlString<T>(name: string, object: T, property: keyof T) {
+  controlString<T>(name: string, object: T, property: keyof T) {
     this.gui ??= new GUI();
 
     this.gui.add(object, property).name(name);
@@ -73,7 +76,7 @@ export class Game extends Phaser.Game {
     return this;
   }
 
-  public controlDropdown<T>(name: string, object: T, property: keyof T, options: unknown[]) {
+  controlDropdown<T>(name: string, object: T, property: keyof T, options: unknown[]) {
     this.gui ??= new GUI();
 
     this.gui.add(object, property, options).name(name);
@@ -81,11 +84,21 @@ export class Game extends Phaser.Game {
     return this;
   }
 
-  public controlCallback(name: string, fn: () => void) {
+  controlCallback(name: string, fn: () => void) {
     this.gui ??= new GUI();
 
     this.gui.add({ fn }, `fn`).name(name);
 
     return this;
+  }
+
+  registerKeyboardKey(input: Phaser.Input.Keyboard.KeyboardPlugin, keyCode: TypeOfKeyCode): Phaser.Input.Keyboard.Key {
+    const existing = this.keys[keyCode] ?? keyCode;
+
+    const key = input.addKey(existing);
+
+    this.keys[key?.keyCode ?? 0] = key;
+
+    return key;
   }
 }
