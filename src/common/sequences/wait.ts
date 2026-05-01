@@ -7,7 +7,7 @@ export class Wait implements Sequenceable {
 
   constructor(private duration: number | (() => number)) {}
 
-  public update(delta: number) {
+  update(delta: number) {
     if (this.resolvedDuration === undefined) {
       this.resolvedDuration = this.resolveDuration();
     }
@@ -15,11 +15,11 @@ export class Wait implements Sequenceable {
     this.elapsed += delta;
   }
 
-  public isComplete(): boolean {
+  isComplete() {
     return this.resolvedDuration !== undefined && this.elapsed > this.resolvedDuration;
   }
 
-  public reset() {
+  reset() {
     this.elapsed = 0;
     this.resolvedDuration = undefined;
   }

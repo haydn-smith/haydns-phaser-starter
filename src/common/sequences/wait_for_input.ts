@@ -10,17 +10,17 @@ export class WaitForInput implements Sequenceable {
     private action: TypeOfAction
   ) {}
 
-  public update() {
+  update() {
     if (this.inputs.isJustPressed(this.action)) {
       this.isInputPressed = true;
     }
   }
 
-  public isComplete(): boolean {
+  isComplete() {
     return this.isInputPressed;
   }
 
-  public reset() {
+  reset() {
     this.isInputPressed = false;
   }
 }

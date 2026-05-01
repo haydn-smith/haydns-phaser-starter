@@ -8,7 +8,7 @@ export class PlayAnimation implements Sequenceable {
     private animation: string
   ) {}
 
-  public update() {
+  update() {
     if (!this.hasStarted) {
       this.sprite.play(this.animation);
 
@@ -16,14 +16,14 @@ export class PlayAnimation implements Sequenceable {
     }
   }
 
-  public isComplete(): boolean {
+  isComplete() {
     return (
       this.sprite.anims === undefined ||
       this.sprite.anims.getTotalFrames() - 1 === this.sprite.anims.currentFrame?.index
     );
   }
 
-  public reset() {
+  reset() {
     this.hasStarted = false;
   }
 }

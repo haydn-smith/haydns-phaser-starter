@@ -5,17 +5,17 @@ export class RunCallback implements Sequenceable {
 
   constructor(private fn: () => void) {}
 
-  public update() {
+  update() {
     this.fn();
 
     this.hasRunCallback = true;
   }
 
-  public isComplete(): boolean {
+  isComplete() {
     return this.hasRunCallback;
   }
 
-  public reset() {
+  reset() {
     this.hasRunCallback = false;
   }
 }

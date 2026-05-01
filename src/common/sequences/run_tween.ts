@@ -7,7 +7,7 @@ export class RunTween implements Sequenceable {
   private isFinished = false;
 
   constructor(
-    public scene: Scene,
+    private scene: Scene,
     private config: Phaser.Types.Tweens.TweenChainBuilderConfig
   ) {
     config = {
@@ -16,7 +16,7 @@ export class RunTween implements Sequenceable {
     };
   }
 
-  public update() {
+  update() {
     if (!this.isStarted) {
       this.isStarted = true;
 
@@ -29,11 +29,11 @@ export class RunTween implements Sequenceable {
     }
   }
 
-  public isComplete(): boolean {
+  isComplete() {
     return this.isFinished;
   }
 
-  public reset() {
+  reset() {
     this.isFinished = false;
     this.isStarted = false;
   }

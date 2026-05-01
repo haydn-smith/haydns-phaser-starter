@@ -11,7 +11,7 @@ export class Sequence extends Phaser.GameObjects.GameObject {
     public scene: Scene,
     private sequenceables: Sequenceable[] = []
   ) {
-    super(scene, 'Sequenceable');
+    super(scene, 'Sequence');
 
     this.renderFlags = 0;
 
