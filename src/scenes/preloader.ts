@@ -84,6 +84,6 @@ export class Preloader extends Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start(`Camera Example`);
+    this.scene.start(`Collision Example`);
   }
 }

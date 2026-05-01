@@ -69,6 +69,10 @@ export type TypeOfAnimation = (typeof ANIMATION)[KeyOfAnimation];
 
 export const COLLISION_TAG = {
   Player: 'player',
+  Pushable: 'pushable',
+  PushesObjects: 'pushes_objects',
+  Slideable: 'slideable',
+  SlidesOnObjects: 'slides_on_objects',
 } as const;
 export type KeyOfCollisionTag = keyof typeof COLLISION_TAG;
 export type TypeOfCollisionTag = (typeof COLLISION_TAG)[KeyOfCollisionTag];

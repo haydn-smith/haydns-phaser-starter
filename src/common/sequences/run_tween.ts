@@ -37,4 +37,3 @@ export class RunTween implements Sequenceable {
     this.isStarted = false;
   }
 }
-

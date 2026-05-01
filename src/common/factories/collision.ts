@@ -10,6 +10,6 @@ export function collisionBorder(scene: Scene, rect: Phaser.Geom.Rectangle): Coll
   ];
 }
 
-export function collision(scene: Scene, rect: Phaser.Geom.Rectangle) {
+export function collisionRect(scene: Scene, rect: Phaser.Geom.Rectangle) {
   return Collision.fromArea(scene, rect);
 }

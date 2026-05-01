@@ -1,5 +1,15 @@
+import { vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
-import { DEPTH } from 'constants';
+import { DEPTH, TypeOfCollisionTag } from 'constants';
+
+export type OnCollideFnProps = {
+  collision: Collision;
+  other: Collision;
+  delta: number;
+  remaining: Phaser.Math.Vector2;
+};
+
+export type OnCollideFn = ({ collision, other, delta, remaining }: OnCollideFnProps) => void;
 
 const getAllChildren = (scene: Scene): Phaser.GameObjects.GameObject[] => {
   return traverse(scene.children.getAll());
@@ -18,9 +28,9 @@ export class Collision extends Phaser.GameObjects.Zone {
 
   private tags: Partial<Record<string, boolean>> = {};
 
-  public isSolid: boolean = true;
+  private isSolid: boolean = true;
 
-  public collisionMask: number = 0x1111;
+  private collisionMask: number = 0x1111;
 
   constructor(
     public scene: Scene,
@@ -36,11 +46,11 @@ export class Collision extends Phaser.GameObjects.Zone {
     this.graphics = this.scene.add.graphics();
   }
 
-  public static fromArea(scene: Scene, area: Phaser.Geom.Rectangle) {
+  static fromArea(scene: Scene, area: Phaser.Geom.Rectangle) {
     return new Collision(scene, area.x, area.y, area.width, area.height);
   }
 
-  public preUpdate() {
+  preUpdate() {
     if (this.scene.app().isDebug()) {
       const d = this.getWorldTransformMatrix().decomposeMatrix();
 
@@ -52,19 +62,19 @@ export class Collision extends Phaser.GameObjects.Zone {
     }
   }
 
-  public destroy() {
+  destroy() {
     super.destroy();
 
     this.graphics.destroy();
   }
 
-  public setSolid(solid: boolean): Collision {
+  setSolid(solid: boolean) {
     this.isSolid = solid;
 
     return this;
   }
 
-  public moveX(amount: number, onCollide?: (collidesWith: Collision) => void): number {
+  moveX(amount: number, onCollide?: OnCollideFn) {
     let moveX = 0;
 
     this.xRemainder += amount;
@@ -94,7 +104,12 @@ export class Collision extends Phaser.GameObjects.Zone {
         moveX += sign;
         move -= sign;
       } else {
-        onCollide?.(intersects);
+        onCollide?.({
+          collision: this,
+          other: intersects,
+          delta: this.scene.app().loop.delta,
+          remaining: vec2(move, 0),
+        });
         this.xRemainder = 0;
         break;
       }
@@ -103,7 +118,7 @@ export class Collision extends Phaser.GameObjects.Zone {
     return moveX;
   }
 
-  public moveY(amount: number, onCollide?: (collidesWith: Collision) => void): number {
+  moveY(amount: number, onCollide?: OnCollideFn) {
     let moveY = 0;
 
     this.yRemainder += amount;
@@ -133,7 +148,12 @@ export class Collision extends Phaser.GameObjects.Zone {
         moveY += sign;
         move -= sign;
       } else {
-        onCollide?.(intersects);
+        onCollide?.({
+          collision: this,
+          other: intersects,
+          delta: this.scene.app().loop.delta,
+          remaining: vec2(0, move),
+        });
         this.yRemainder = 0;
         break;
       }
@@ -142,7 +162,7 @@ export class Collision extends Phaser.GameObjects.Zone {
     return moveY;
   }
 
-  public intersects(collision: Collision): boolean {
+  intersects(collision: Collision) {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
     const dOther = collision.getWorldTransformMatrix().decomposeMatrix();
 
@@ -157,7 +177,7 @@ export class Collision extends Phaser.GameObjects.Zone {
     );
   }
 
-  public intersectsAny(): Collision | undefined {
+  intersectsAny() {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
 
     return getAllChildren(this.scene).reduce<Collision | undefined>((acc, o) => {
@@ -182,7 +202,7 @@ export class Collision extends Phaser.GameObjects.Zone {
     }, undefined);
   }
 
-  public intersectsWith(): Collision[] {
+  intersectsWith() {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
 
     return getAllChildren(this.scene).reduce<Collision[]>((acc, o) => {
@@ -206,7 +226,11 @@ export class Collision extends Phaser.GameObjects.Zone {
     }, []);
   }
 
-  private isBlockedAt(rectange: Phaser.Geom.Rectangle): Collision | undefined {
+  intersectsWithTag(tag: TypeOfCollisionTag) {
+    return this.intersectsWith().filter((c) => c.hasTag(tag));
+  }
+
+  private isBlockedAt(rectange: Phaser.Geom.Rectangle) {
     if (!this.isSolid) {
       return undefined;
     }
@@ -232,23 +256,23 @@ export class Collision extends Phaser.GameObjects.Zone {
     return isColliding;
   }
 
-  public getActor(): Phaser.Types.Math.Vector2Like {
+  getActor(): Phaser.GameObjects.Container | this {
     return this.parentContainer ?? this;
   }
 
-  public setMask(mask: number): Collision {
+  setMask(mask: number) {
     this.collisionMask = mask;
 
     return this;
   }
 
-  public setTag(tag: string): Collision {
+  setTag(tag: TypeOfCollisionTag) {
     this.tags[tag] = true;
 
     return this;
   }
 
-  public hasTag(tag: string): boolean {
+  hasTag(tag: TypeOfCollisionTag) {
     return this.tags[tag] ?? false;
   }
 }
