@@ -18,8 +18,7 @@ export class PlayAnimation implements Sequenceable {
 
   isComplete() {
     return (
-      this.sprite.anims === undefined ||
-      this.sprite.anims.getTotalFrames() - 1 === this.sprite.anims.currentFrame?.index
+      this.sprite.anims === undefined || this.sprite.anims.getTotalFrames() === this.sprite.anims.currentFrame?.index
     );
   }
 

@@ -6,35 +6,35 @@ export class RunTween implements Sequenceable {
 
   private isFinished = false;
 
-  constructor(
-    private scene: Scene,
-    private config: Phaser.Types.Tweens.TweenChainBuilderConfig
-  ) {
+  private tween;
+
+  constructor(scene: Scene, config: Phaser.Types.Tweens.TweenChainBuilderConfig) {
     config = {
       ...config,
       paused: true,
     };
+
+    this.tween = scene.tweens.add(config);
+    this.tween.on('complete', () => {
+      this.isFinished = true;
+    });
   }
 
-  update() {
+  public update() {
     if (!this.isStarted) {
       this.isStarted = true;
 
-      this.scene.tweens
-        .add(this.config)
-        .on('complete', () => {
-          this.isFinished = true;
-        })
-        .play();
+      this.tween.play();
     }
   }
 
-  isComplete() {
+  public isComplete(): boolean {
     return this.isFinished;
   }
 
-  reset() {
+  public reset() {
     this.isFinished = false;
     this.isStarted = false;
   }
 }
+
