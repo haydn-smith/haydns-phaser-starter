@@ -1,76 +1,19 @@
-import { vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
-import { clamp, normalize } from 'common/utils/math';
-import { States } from 'common/utils/states';
+import { normalize } from 'common/utils/math';
+import { linearMovement, MovementFn } from 'common/utils/movement_functions';
 import { DEPTH } from 'constants';
 import { Collision } from './collision';
 
-type MovementStates = 'idle' | 'moveToTarget';
-
-export const linearMovement: MovementFn = (
-  _currentVelocity: Phaser.Math.Vector2,
-  direction: Phaser.Math.Vector2,
-  _delta: number,
-  speed: number
-): Phaser.Math.Vector2 => {
-  if (direction.equals(Phaser.Math.Vector2.ZERO)) {
-    return Phaser.Math.Vector2.ZERO;
-  }
-
-  return direction.clone().normalize().multiply(new Phaser.Math.Vector2(speed));
-};
-
-export const velocityMovement: MovementFn = (
-  currentVelocity: Phaser.Math.Vector2,
-  direction: Phaser.Math.Vector2,
-  delta: number,
-  speed = 200,
-  acceleration = 800
-): Phaser.Math.Vector2 => {
-  if (direction.equals(Phaser.Math.Vector2.ZERO)) {
-    return currentVelocity;
-  }
-
-  const directionTowardsTarget = new Phaser.Math.Vector2(clamp(-1, 1, direction.x), clamp(-1, 1, direction.y))
-    .clone()
-    .multiply(vec2(speed, speed))
-    .subtract(currentVelocity)
-    .normalize();
-
-  return currentVelocity
-    .clone()
-    .add({
-      x: directionTowardsTarget.x * acceleration * delta * 0.001,
-      y: directionTowardsTarget.y * acceleration * delta * 0.001,
-    })
-    .limit(speed);
-};
-
-export type MovementFn = (
-  currentVelocity: Phaser.Math.Vector2,
-  direction: Phaser.Math.Vector2,
-  delta: number,
-  speed: number,
-  acceleration: number
-) => Phaser.Math.Vector2;
-
+// TODO: Add collision handling somehow.
 export class Movement extends Phaser.GameObjects.GameObject {
   private graphics: Phaser.GameObjects.Graphics;
-
   private lastMovementDirection: Phaser.Math.Vector2 = Phaser.Math.Vector2.DOWN;
-  private prevVelocity: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0);
   private velocity: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0);
   private easedVelocity: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0);
   private acceleration: number = 1200;
   private speed: number = 240;
-
-  private target?: Phaser.Math.Vector2;
-
-  private states: States<MovementStates, 'idle'>;
-
   private easeFn: (v: number) => number = Phaser.Math.Easing.Linear;
-
-  private movementFn: MovementFn = velocityMovement;
+  private movementFn: MovementFn = linearMovement;
 
   constructor(
     public scene: Scene,
@@ -80,50 +23,13 @@ export class Movement extends Phaser.GameObjects.GameObject {
     super(scene, 'Movement');
 
     this.renderFlags = 0;
-
-    this.graphics = this.scene.add.graphics();
-
-    this.states = new States<MovementStates, 'idle'>(scene, 'idle')
-      .add('idle', () => {})
-      .add('moveToTarget', ({ change, delta }) => {
-        if (!this.target) {
-          change('idle');
-
-          return;
-        }
-
-        const difference = this.target.clone().subtract(this.currentPosition());
-
-        if (Math.abs(difference.x) < this.speed * delta * 0.001) {
-          this.actor.x = this.target.x;
-        }
-
-        if (Math.abs(difference.y) < this.speed * delta * 0.001) {
-          this.actor.y = this.target.y;
-        }
-
-        if (difference.length() < this.speed * delta * 0.001) {
-          this.actor.setPosition(this.target.x, this.target.y);
-          this.velocity = Phaser.Math.Vector2.ZERO;
-
-          change('idle');
-
-          return;
-        }
-
-        const direction = new Phaser.Math.Vector2(
-          Math.abs(difference.x) < this.speed * delta * 0.001 ? 0 : difference.x > 0 ? 1 : -1,
-          Math.abs(difference.y) < this.speed * delta * 0.001 ? 0 : difference.y > 0 ? 1 : -1
-        );
-
-        this.moveInDirection(direction, delta);
-      });
+    this.graphics = new Phaser.GameObjects.Graphics(this.scene);
   }
 
   public preUpdate(_: number, delta: number) {
-    this.states.step(delta);
-
     if (this.scene.app().isDebug()) {
+      this.scene.add.existing(this.graphics);
+
       const d = this.actor.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics
@@ -140,22 +46,6 @@ export class Movement extends Phaser.GameObjects.GameObject {
         );
     }
 
-    if (
-      this.movementFn === velocityMovement &&
-      this.prevVelocity.x === this.velocity.x &&
-      !this.velocity.equals(Phaser.Math.Vector2.ZERO)
-    ) {
-      this.moveInDirection(this.velocity.clone().negate().multiply({ x: 1, y: 0 }), delta, false);
-    }
-
-    if (
-      this.movementFn === velocityMovement &&
-      this.prevVelocity.y === this.velocity.y &&
-      !this.velocity.equals(Phaser.Math.Vector2.ZERO)
-    ) {
-      this.moveInDirection(this.velocity.clone().negate().multiply({ x: 0, y: 1 }), delta, false);
-    }
-
     this.doMove(delta);
   }
 
@@ -164,58 +54,16 @@ export class Movement extends Phaser.GameObjects.GameObject {
     this.graphics.destroy();
   }
 
-  public moveInDirection(direction: Phaser.Math.Vector2, delta: number, crossZero = true): Movement {
-    const velocity = this.movementFn(this.velocity.clone(), direction, delta, this.speed, this.acceleration);
-
-    const xCrossedZero = (velocity.x > 0 && this.velocity.x < 0) || (velocity.x < 0 && this.velocity.x > 0);
-
-    const yCrossedZero = (velocity.y > 0 && this.velocity.y < 0) || (velocity.y < 0 && this.velocity.y > 0);
-
-    if (!crossZero && xCrossedZero) {
-      velocity.x = 0;
-    }
-
-    if (!crossZero && yCrossedZero) {
-      velocity.y = 0;
-    }
+  public moveInDirection(direction: Phaser.Math.Vector2, delta: number): Movement {
+    const velocity = this.movementFn({
+      currentVelocity: this.velocity.clone(),
+      direction,
+      delta,
+      speed: this.speed,
+      acceleration: this.acceleration,
+    });
 
     this.velocity = velocity;
-
-    return this;
-  }
-
-  private doMove(delta: number) {
-    if (!this.velocity.equals(Phaser.Math.Vector2.ZERO)) {
-      this.lastMovementDirection = this.velocity.clone().normalize();
-    }
-
-    const normalized = normalize(0, this.speed, this.velocity.length());
-
-    const eased = this.easeFn(normalized);
-
-    this.easedVelocity = this.velocity
-      .clone()
-      .normalize()
-      .multiply({
-        x: this.speed * eased,
-        y: this.speed * eased,
-      });
-
-    const moveY = this.collision.moveY(this.easedVelocity.y * (delta * 0.001), () => (this.velocity.y = 0));
-
-    const moveX = this.collision.moveX(this.easedVelocity.x * (delta * 0.001), () => (this.velocity.x = 0));
-
-    this.actor.setPosition(this.actor.x, this.actor.y + moveY);
-
-    this.actor.setPosition(this.actor.x + moveX, this.actor.y);
-
-    this.prevVelocity = this.velocity;
-  }
-
-  public moveTo(position: Phaser.Math.Vector2): Movement {
-    this.target = position;
-
-    this.states.change('moveToTarget');
 
     return this;
   }
@@ -234,10 +82,8 @@ export class Movement extends Phaser.GameObjects.GameObject {
     return !this.isNotMoving();
   }
 
-  public currentPosition(): Phaser.Math.Vector2 {
-    const d = this.actor.getWorldTransformMatrix().decomposeMatrix();
-
-    return new Phaser.Math.Vector2(d.translateX, d.translateY);
+  getActor() {
+    return this.actor;
   }
 
   public getCardinalDirection(): 'north' | 'south' | 'east' | 'west' {
@@ -277,10 +123,6 @@ export class Movement extends Phaser.GameObjects.GameObject {
     return this;
   }
 
-  public getPosition() {
-    return new Phaser.Math.Vector2(this.actor.x, this.actor.y);
-  }
-
   public getVelocity() {
     return this.velocity;
   }
@@ -301,5 +143,28 @@ export class Movement extends Phaser.GameObjects.GameObject {
     this.movementFn = movementFn;
 
     return this;
+  }
+
+  private doMove(delta: number) {
+    if (!this.velocity.equals(Phaser.Math.Vector2.ZERO)) {
+      this.lastMovementDirection = this.velocity.clone().normalize();
+    }
+
+    const normalized = normalize(0, this.speed, this.velocity.length());
+    const eased = this.easeFn(normalized);
+
+    this.easedVelocity = this.velocity
+      .clone()
+      .normalize()
+      .multiply({
+        x: this.speed * eased,
+        y: this.speed * eased,
+      });
+
+    const moveY = this.collision.moveY(this.easedVelocity.y * (delta * 0.001), () => (this.velocity.y = 0));
+    const moveX = this.collision.moveX(this.easedVelocity.x * (delta * 0.001), () => (this.velocity.x = 0));
+
+    this.actor.setPosition(this.actor.x, this.actor.y + moveY);
+    this.actor.setPosition(this.actor.x + moveX, this.actor.y);
   }
 }

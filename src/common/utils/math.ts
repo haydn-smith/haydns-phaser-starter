@@ -21,3 +21,7 @@ export const randomFloat = (min: number, max: number) => {
 export const sameSign = (x: number, y: number): boolean => {
   return Boolean(Number(x >= 0) ^ Number(y < 0));
 };
+
+export const closestToZero = (n1: number, n2: number): number => {
+  return Math.abs(n1) > Math.abs(n2) ? n2 : n1;
+};

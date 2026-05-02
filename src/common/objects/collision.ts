@@ -11,25 +11,12 @@ export type OnCollideFnProps = {
 
 export type OnCollideFn = ({ collision, other, delta, remaining }: OnCollideFnProps) => void;
 
-const getAllChildren = (scene: Scene): Phaser.GameObjects.GameObject[] => {
-  return traverse(scene.children.getAll());
-};
-
-const traverse = (list: Phaser.GameObjects.GameObject[]): Phaser.GameObjects.GameObject[] => {
-  return list.flatMap((o) => (o instanceof Phaser.GameObjects.Container ? [o, ...traverse(o.getAll())] : [o]));
-};
-
 export class Collision extends Phaser.GameObjects.Zone {
   private graphics: Phaser.GameObjects.Graphics;
-
   private xRemainder: number = 0;
-
   private yRemainder: number = 0;
-
   private tags: Partial<Record<string, boolean>> = {};
-
   private isSolid: boolean = true;
-
   private collisionMask: number = 0x1111;
 
   constructor(
@@ -68,7 +55,7 @@ export class Collision extends Phaser.GameObjects.Zone {
     this.graphics.destroy();
   }
 
-  setSolid(solid: boolean) {
+  setSolid(solid: boolean = true) {
     this.isSolid = solid;
 
     return this;
@@ -180,7 +167,7 @@ export class Collision extends Phaser.GameObjects.Zone {
   intersectsAny() {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
 
-    return getAllChildren(this.scene).reduce<Collision | undefined>((acc, o) => {
+    return this.scene.allChildren().reduce<Collision | undefined>((acc, o) => {
       if (!(o instanceof Collision && o !== this && (o.collisionMask & this.collisionMask) > 0)) {
         return acc;
       }
@@ -205,7 +192,7 @@ export class Collision extends Phaser.GameObjects.Zone {
   intersectsWith() {
     const d = this.getWorldTransformMatrix().decomposeMatrix();
 
-    return getAllChildren(this.scene).reduce<Collision[]>((acc, o) => {
+    return this.scene.allChildren().reduce<Collision[]>((acc, o) => {
       if (!(o instanceof Collision && o !== this && (o.collisionMask & this.collisionMask) > 0)) {
         return acc;
       }
@@ -230,19 +217,18 @@ export class Collision extends Phaser.GameObjects.Zone {
     return this.intersectsWith().filter((c) => c.hasTag(tag));
   }
 
-  private isBlockedAt(rectange: Phaser.Geom.Rectangle) {
+  isBlockedAt(rectange: Phaser.Geom.Rectangle) {
     if (!this.isSolid) {
       return undefined;
     }
 
     let isColliding: Collision | undefined = undefined;
 
-    getAllChildren(this.scene).forEach((o) => {
-      if (o instanceof Collision && o.isSolid && (o.collisionMask & this.collisionMask) > 0) {
+    this.scene.allChildren().forEach((o) => {
+      if (o instanceof Collision && o !== this && o.isSolid && (o.collisionMask & this.collisionMask) > 0) {
         const d = o.getWorldTransformMatrix().decomposeMatrix();
 
         if (
-          o !== this &&
           Phaser.Geom.Intersects.RectangleToRectangle(
             new Phaser.Geom.Rectangle(d.translateX, d.translateY, o.width * d.scaleX, o.height * d.scaleY),
             rectange

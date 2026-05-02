@@ -1,10 +1,11 @@
 import { directionalInputs } from 'common/factories/input';
 import { rect } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
+import { velocityMovement } from 'common/utils/movement_functions';
 import { ACTION, ANIMATION, COLLISION_TAG, SPRITE } from 'constants';
 import { Collision } from './collision';
 import { Input } from './input/input';
-import { Movement, velocityMovement } from './movement';
+import { Movement } from './movement';
 
 export class Player extends Phaser.GameObjects.Container {
   private collision: Collision;

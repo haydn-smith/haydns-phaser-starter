@@ -9,7 +9,3 @@ export function collisionBorder(scene: Scene, rect: Phaser.Geom.Rectangle): Coll
     Collision.fromArea(scene, new Phaser.Geom.Rectangle(rect.x + rect.width, rect.y, 1, rect.height)),
   ];
 }
-
-export function collisionRect(scene: Scene, rect: Phaser.Geom.Rectangle) {
-  return Collision.fromArea(scene, rect);
-}

@@ -7,6 +7,7 @@ import { Debug } from 'scenes/debug';
 import { CameraExample } from 'scenes/examples/camera_example';
 import { CollisionExample } from 'scenes/examples/collision_example';
 import { InputExample } from 'scenes/examples/input_example';
+import { MovementExample } from 'scenes/examples/movement_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
 import { MainMenu } from 'scenes/main_menu';
 import { Preloader } from 'scenes/preloader';
@@ -59,6 +60,7 @@ const config: Phaser.Types.Core.GameConfig = {
     CameraExample,
     InputExample,
     CollisionExample,
+    MovementExample,
   ],
 };
 
