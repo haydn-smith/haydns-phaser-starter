@@ -1,3 +1,5 @@
+import { SCENE } from 'constants';
+import { SoundManager } from 'scenes/sound_manager';
 import { Game } from './game';
 
 export class Scene extends Phaser.Scene {
@@ -36,5 +38,9 @@ export class Scene extends Phaser.Scene {
       // ...And children on the update list.
       ...this.sys.updateList.getActive(),
     ]);
+  }
+
+  soundManager() {
+    return this.scene.get<SoundManager>(SCENE.SoundManager);
   }
 }

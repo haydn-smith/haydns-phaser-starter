@@ -1,5 +1,4 @@
 import { actionInput } from 'common/factories/input';
-import { Audio } from 'common/objects/audio';
 import { Camera } from 'common/objects/camera';
 import { Input } from 'common/objects/input/input';
 import { Sequence } from 'common/objects/sequence';
@@ -10,7 +9,7 @@ import { RunTween } from 'common/sequences/run_tween';
 import { Wait } from 'common/sequences/wait';
 import { WaitForInput } from 'common/sequences/wait_for_input';
 import { scaled } from 'common/utils/scaled';
-import { ACTION, ANIMATION, DEPTH, FLAG, FONT, SCENE, SOUND } from 'constants';
+import { ACTION, ANIMATION, DEPTH, FLAG, FONT, SCENE } from 'constants';
 
 export class MainMenu extends Scene {
   private typewriter: Typewriter;
@@ -53,8 +52,6 @@ export class MainMenu extends Scene {
 
     this.inputs = actionInput(this);
 
-    const activate = new Audio(this, SOUND.Activate);
-
     new Sequence(this, [
       new Wait(1000),
       new RunCallback(() => this.typewriter.write(`Are you ready\nto begin your journey?`)),
@@ -63,7 +60,6 @@ export class MainMenu extends Scene {
       new RunCallback(() => this.typewriter2.write(`Press [animation:${ANIMATION.ZButton}] to\nstart.`)),
       new Wait(() => this.typewriter2.writeDuration()),
       new WaitForInput(this.inputs, ACTION.Action),
-      new RunCallback(() => activate.play()),
       new RunTween(this, {
         targets: this.typewriter,
         alpha: 0,

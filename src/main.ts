@@ -8,9 +8,11 @@ import { CameraExample } from 'scenes/examples/camera_example';
 import { CollisionExample } from 'scenes/examples/collision_example';
 import { InputExample } from 'scenes/examples/input_example';
 import { MovementExample } from 'scenes/examples/movement_example';
+import { SoundExample } from 'scenes/examples/sound_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
 import { MainMenu } from 'scenes/main_menu';
 import { Preloader } from 'scenes/preloader';
+import { SoundManager } from 'scenes/sound_manager';
 
 // @ts-expect-error Injected environment variable.
 if (process.env.PHASER_SENTRY_DSN) {
@@ -56,11 +58,13 @@ const config: Phaser.Types.Core.GameConfig = {
     Preloader,
     MainMenu,
     Debug,
+    SoundManager,
     TypewriterExample,
     CameraExample,
     InputExample,
     CollisionExample,
     MovementExample,
+    SoundExample,
   ],
 };
 

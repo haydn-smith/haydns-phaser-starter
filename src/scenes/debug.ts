@@ -1,6 +1,5 @@
 import { actionInput } from 'common/factories/input';
 import { debugMap } from 'common/factories/tilemap';
-import { Audio } from 'common/objects/audio';
 import { Camera } from 'common/objects/camera';
 import { Input } from 'common/objects/input/input';
 import { Player } from 'common/objects/player';
@@ -14,8 +13,6 @@ export class Debug extends Scene {
   private inputs: Input;
 
   private camera: Camera;
-
-  private activate: Audio;
 
   private music: SpatialAudio;
 
@@ -36,8 +33,6 @@ export class Debug extends Scene {
 
     this.camera = this.add.existing(new Camera(this).follow(this.player));
 
-    this.activate = new Audio(this, SOUND.Activate).dontLoop().withVolume(0.7);
-
     this.music = new SpatialAudio(this, SOUND.Music)
       .loop()
       .setVolume(0.5)
@@ -49,8 +44,6 @@ export class Debug extends Scene {
   update() {
     if (this.inputs.isJustPressed(ACTION.Action)) {
       this.camera.zoom(Math.random() + 1, 2000);
-
-      this.activate.play();
 
       this.music.toggle();
 

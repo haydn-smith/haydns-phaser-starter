@@ -78,12 +78,12 @@ export class Preloader extends Scene {
 
     // Start management scenes.
     // TODO: A transition manager scene.
-    // TODO: An audio manager scene.
+    this.scene.run(SCENE.SoundManager);
 
     // Allow the sound to play.
     this.sound.unlock();
 
     // Start game.
-    this.scene.start(`Movement Example`);
+    this.scene.start('Sound Example');
   }
 }

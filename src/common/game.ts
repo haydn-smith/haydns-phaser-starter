@@ -6,9 +6,9 @@ import { logEvent } from './utils/log';
 export class Game extends Phaser.Game {
   private debug: boolean = false;
 
-  private flags: Partial<Record<TypeOfFlag, boolean>> = {};
-
   private gui?: GUI;
+
+  private flags: Partial<Record<TypeOfFlag, boolean>> = {};
 
   private keys: Record<number, Phaser.Input.Keyboard.Key> = {};
 

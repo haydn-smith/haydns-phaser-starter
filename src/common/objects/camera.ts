@@ -40,6 +40,7 @@ export class Camera extends Phaser.GameObjects.GameObject {
     });
 
     this.on('destroy', () => {
+      console.log('here cam');
       this.shaker.destroy();
     });
   }

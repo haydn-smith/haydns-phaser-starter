@@ -24,6 +24,7 @@ export const SCENE = {
   MainMenu: 'Main Menu',
   UserInterface: 'User Interface',
   Debug: 'Debug',
+  SoundManager: 'Sound Manager',
 } as const;
 export type KeyOfScene = keyof typeof SCENE;
 export type TypeOfScene = (typeof SCENE)[KeyOfScene];
