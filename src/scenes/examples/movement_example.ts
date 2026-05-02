@@ -8,8 +8,6 @@ import { Scene } from 'common/scene';
 import { velocityMovement } from 'common/utils/movement_functions';
 import { ACTION, COLLISION_TAG } from 'constants';
 
-const MOVE_SPEED = 200;
-
 const PUSH_SPEED = 100;
 
 export class MovementExample extends Scene {
@@ -17,7 +15,6 @@ export class MovementExample extends Scene {
   private dot: Phaser.GameObjects.Container;
   private collision: Collision;
   private movement: Movement;
-  private lastDirection: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
 
   constructor() {
     super('Movement Example');
@@ -73,16 +70,13 @@ export class MovementExample extends Scene {
 
     // We can check for intersections at any time, on any collision object.
     if (this.collision.intersectsWithTag(COLLISION_TAG.Slideable).length) {
-      x = this.lastDirection.x;
-      y = this.lastDirection.y;
+      x = this.movement.getVelocity().x;
+      y = this.movement.getVelocity().y;
     }
 
-    // Move the dot using collision. The collision's move function takes a callback that allows us to change what
+    // Move the dot using movement. The collision's move function takes a callback that allows us to change what
     // happens when a future collision is detected.
-    this.movement.moveInDirection(vec2(x * delta * 0.001 * MOVE_SPEED, y * delta * 0.001 * MOVE_SPEED), delta);
-
-    // Record the last direction to enable the sliding rectangle.
-    this.lastDirection = vec2(x, y);
+    this.movement.moveInDirection(vec2(x, y), delta, this.onCollide);
   }
 
   private onCollide = ({ collision, other, delta, remaining }: OnCollideFnProps) => {
@@ -94,13 +88,6 @@ export class MovementExample extends Scene {
         .setPosition(
           (other.getActor().x += other.moveX(direction.x * delta * 0.001 * PUSH_SPEED, this.onCollide)),
           (other.getActor().y += other.moveY(direction.y * delta * 0.001 * PUSH_SPEED, this.onCollide))
-        );
-
-      collision
-        .getActor()
-        .setPosition(
-          (collision.getActor().x += collision.moveX(direction.x * delta * 0.001 * MOVE_SPEED)),
-          (collision.getActor().y += collision.moveY(direction.y * delta * 0.001 * MOVE_SPEED))
         );
     }
   };

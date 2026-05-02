@@ -30,7 +30,7 @@ export class Collision extends Phaser.GameObjects.Zone {
 
     this.setName('Collision');
 
-    this.graphics = this.scene.add.graphics();
+    this.graphics = new Phaser.GameObjects.Graphics(this.scene);
   }
 
   static fromArea(scene: Scene, area: Phaser.Geom.Rectangle) {
@@ -39,6 +39,8 @@ export class Collision extends Phaser.GameObjects.Zone {
 
   preUpdate() {
     if (this.scene.app().isDebug()) {
+      this.scene.add.existing(this.graphics);
+
       const d = this.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics
@@ -50,9 +52,8 @@ export class Collision extends Phaser.GameObjects.Zone {
   }
 
   destroy() {
-    super.destroy();
-
     this.graphics.destroy();
+    super.destroy();
   }
 
   setSolid(solid: boolean = true) {

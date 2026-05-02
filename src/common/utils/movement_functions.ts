@@ -56,5 +56,6 @@ export const velocityMovement: MovementFn = ({
     })
     .limit(speed);
 
+  // If the velocity is <5, we snap to zero to prevent jittering while the actor is stationary.
   return vec2(Math.abs(newVelocity.x) < 5 ? 0 : newVelocity.x, Math.abs(newVelocity.y) < 5 ? 0 : newVelocity.y);
 };
