@@ -5,6 +5,7 @@ import 'phaser';
 import { Boot } from 'scenes/boot';
 import { CameraExample } from 'scenes/examples/camera_example';
 import { CollisionExample } from 'scenes/examples/collision_example';
+import { FlagsExample } from 'scenes/examples/flags_example';
 import { InputExample } from 'scenes/examples/input_example';
 import { MovementExample } from 'scenes/examples/movement_example';
 import { SoundExample } from 'scenes/examples/sound_example';
@@ -64,6 +65,7 @@ const config: Phaser.Types.Core.GameConfig = {
     MovementExample,
     SoundExample,
     TilemapExample,
+    FlagsExample,
   ],
 };
 

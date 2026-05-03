@@ -87,7 +87,7 @@ export type TypeOfCollisionMask = (typeof COLLISION_MASK)[KeyOfCollisionMask];
 export const GLOBAL_SCALE = 1;
 
 export const FLAG = {
-  SkipMainMenu: 'skip_main_menu',
+  Debug: 'debug',
 } as const;
 export type KeyOfFlag = keyof typeof FLAG;
 export type TypeOfFlag = (typeof FLAG)[KeyOfFlag];
