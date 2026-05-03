@@ -44,6 +44,7 @@ export class Collision extends Phaser.GameObjects.Zone {
       const d = this.getWorldTransformMatrix().decomposeMatrix();
 
       this.graphics
+        .setScrollFactor(this.scrollFactorX, this.scrollFactorY)
         .setDepth(DEPTH.Debug)
         .clear()
         .lineStyle(1, 0xff0000, 1)

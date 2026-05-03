@@ -1,7 +1,7 @@
 import { rect } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
-import { DEPTH, TypeOfTilemap, TypeOfTileset } from 'constants';
+import { TypeOfTilemap, TypeOfTileset } from 'constants';
 import { Collision } from './collision';
 
 export class Tilemap extends Phaser.GameObjects.GameObject {
@@ -14,8 +14,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
   constructor(
     public scene: Scene,
     tilemap: TypeOfTilemap,
-    tileset: TypeOfTileset,
-    forEachTile?: (tile: Phaser.Tilemaps.Tile) => void
+    tileset: TypeOfTileset
   ) {
     super(scene, 'Tilemap');
 
@@ -33,31 +32,9 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
     this.map.layers.forEach((layer) => {
       layer.tilemapLayer.setScale(scaled());
-
-      // TODO: Allow modification of these.
-      layer.tilemapLayer.setScale(2);
-      layer.tilemapLayer.setPosition(100, 100);
-      layer.tilemapLayer.setDepth(DEPTH.Background);
-      layer.tilemapLayer.setScrollFactor(1);
-
-      layer.tilemapLayer.forEachTile((tile) => {
-        forEachTile?.(tile);
-
-        if (tile.properties?.collision) {
-          this.collisions.push(
-            Collision.fromArea(
-              this.scene,
-              rect(
-                tile.x * layer.tileWidth * layer.tilemapLayer.scaleX,
-                tile.y * layer.tileHeight * layer.tilemapLayer.scaleY,
-                layer.tileWidth * layer.tilemapLayer.scaleX,
-                layer.tileHeight * layer.tilemapLayer.scaleY
-              )
-            )
-          );
-        }
-      });
     });
+
+    this.recalculateCollision();
   }
 
   preUpdate() {
@@ -72,17 +49,62 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     super.destroy();
   }
 
-  public forPoints(key: string, fn: (v: Phaser.Math.Vector2) => void): Tilemap {
+  /**
+   * If a tilemap layer's scale, position, or scroll factor are changed, this method can be called to update the
+   * layer's collision to the new values.
+   *
+   * It is an expensive operation, so use it sparingly.
+   */
+  recalculateCollision() {
+    this.collisions.forEach((c) => c.destroy());
+    this.collisions = [];
+
+    this.map.layers.forEach((layer) => {
+      layer.tilemapLayer.forEachTile((tile) => {
+        if (tile.properties['collision']) {
+          this.collisions.push(
+            Collision.fromArea(
+              this.scene,
+              rect(
+                layer.tilemapLayer.x + tile.x * layer.tileWidth * layer.tilemapLayer.scaleX,
+                layer.tilemapLayer.y + tile.y * layer.tileHeight * layer.tilemapLayer.scaleY,
+                layer.tileWidth * layer.tilemapLayer.scaleX,
+                layer.tileHeight * layer.tilemapLayer.scaleY
+              )
+            ).setScrollFactor(layer.tilemapLayer.scrollFactorX, layer.tilemapLayer.scrollFactorY)
+          );
+        }
+      });
+    });
+
+    return this;
+  }
+
+  forPoints(key: string, fn: (v: Phaser.Math.Vector2) => void) {
     this.getPoints(key).forEach(fn);
 
     return this;
   }
 
-  public getPoint(key: string): Phaser.Math.Vector2 {
+  forAreas(key: string, fn: (r: Phaser.Geom.Rectangle) => void) {
+    this.getAreas(key).forEach(fn);
+
+    return this;
+  }
+
+  getLayer(name: string): Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer | undefined {
+    return this.layers.filter((l) => l.layer.name === name)[0];
+  }
+
+  getLayers(): Array<Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer> {
+    return this.layers;
+  }
+
+  getPoint(key: string) {
     return this.getPoints(key)[0] ?? Phaser.Math.Vector2.ZERO;
   }
 
-  public getPoints(key: string): Phaser.Math.Vector2[] {
+  getPoints(key: string) {
     const points = this.map.getObjectLayer('Objects');
 
     if (!points) return [];
@@ -92,17 +114,11 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
       .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(scaled())));
   }
 
-  public forAreas(key: string, fn: (r: Phaser.Geom.Rectangle) => void): Tilemap {
-    this.getAreas(key).forEach(fn);
-
-    return this;
-  }
-
-  public getArea(key: string): Phaser.Geom.Rectangle {
+  getArea(key: string) {
     return this.getAreas(key)[0] ?? new Phaser.Geom.Rectangle(0, 0, 0, 0);
   }
 
-  public getAreas(key: string): Phaser.Geom.Rectangle[] {
+  getAreas(key: string) {
     const areas = this.map.getObjectLayer('Objects');
 
     if (!areas) return [];
