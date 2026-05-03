@@ -8,6 +8,7 @@ import { CollisionExample } from 'scenes/examples/collision_example';
 import { FlagsExample } from 'scenes/examples/flags_example';
 import { InputExample } from 'scenes/examples/input_example';
 import { MovementExample } from 'scenes/examples/movement_example';
+import { ParallaxParticlesExample } from 'scenes/examples/parallax_particles_example';
 import { SoundExample } from 'scenes/examples/sound_example';
 import { TilemapExample } from 'scenes/examples/tilemap_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
@@ -66,6 +67,7 @@ const config: Phaser.Types.Core.GameConfig = {
     SoundExample,
     TilemapExample,
     FlagsExample,
+    ParallaxParticlesExample,
   ],
 };
 

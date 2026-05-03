@@ -89,6 +89,6 @@ export class Preloader extends Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start('Flags Example');
+    this.scene.start('Parallax Particles Example');
   }
 }
