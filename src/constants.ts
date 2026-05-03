@@ -30,7 +30,7 @@ export type KeyOfScene = keyof typeof SCENE;
 export type TypeOfScene = (typeof SCENE)[KeyOfScene];
 
 export const TILEMAP = {
-  Debug: 'tilemaps/debug.json',
+  Debug: 'tilemaps/debug/debug.json',
 } as const;
 export type KeyOfTilemap = keyof typeof TILEMAP;
 export type TypeOfTilemap = (typeof TILEMAP)[KeyOfTilemap];

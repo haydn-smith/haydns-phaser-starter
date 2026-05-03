@@ -98,7 +98,7 @@
         {
          "columns":3,
          "firstgid":1,
-         "image":"debug.png",
+         "image":"..\/debug.png",
          "imageheight":112,
          "imagewidth":112,
          "margin":16,
