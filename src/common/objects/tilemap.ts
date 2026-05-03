@@ -1,46 +1,75 @@
 import { rect } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
-import { DEPTH, TILESET, TypeOfTilemap } from 'constants';
+import { DEPTH, TypeOfTilemap, TypeOfTileset } from 'constants';
 import { Collision } from './collision';
 
 export class Tilemap extends Phaser.GameObjects.GameObject {
   private map: Phaser.Tilemaps.Tilemap;
 
+  private layers: Array<Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer> = [];
+
+  private collisions: Collision[] = [];
+
   constructor(
     public scene: Scene,
-    tilemap: TypeOfTilemap
+    tilemap: TypeOfTilemap,
+    tileset: TypeOfTileset,
+    forEachTile?: (tile: Phaser.Tilemaps.Tile) => void
   ) {
     super(scene, 'Tilemap');
 
     this.renderFlags = 0;
 
-    this.map = this.scene.add.tilemap(tilemap);
+    this.map = scene.make.tilemap({ key: tilemap });
 
-    const tiles = this.map.addTilesetImage('debug', TILESET.Debug);
+    const tiles = this.map.addTilesetImage('debug', tileset);
 
-    if (tiles) {
-      this.map.createLayer('Background', tiles)?.setDepth(DEPTH.Background);
-      this.map.createLayer('Foreground', tiles)?.setDepth(DEPTH.Foreground);
+    if (!tiles) {
+      throw new Error('No tileset found!');
     }
+
+    this.map.layers.forEach((l) => this.layers.push(this.map.createLayer(l.name, tiles).removeFromDisplayList()));
 
     this.map.layers.forEach((layer) => {
       layer.tilemapLayer.setScale(scaled());
 
+      // TODO: Allow modification of these.
+      layer.tilemapLayer.setScale(2);
+      layer.tilemapLayer.setPosition(100, 100);
+      layer.tilemapLayer.setDepth(DEPTH.Background);
+      layer.tilemapLayer.setScrollFactor(1);
+
       layer.tilemapLayer.forEachTile((tile) => {
+        forEachTile?.(tile);
+
         if (tile.properties?.collision) {
-          Collision.fromArea(
-            this.scene,
-            rect(
-              tile.x * layer.tileWidth * layer.tilemapLayer.scaleX,
-              tile.y * layer.tileHeight * layer.tilemapLayer.scaleY,
-              layer.tileWidth * layer.tilemapLayer.scaleX,
-              layer.tileHeight * layer.tilemapLayer.scaleY
+          this.collisions.push(
+            Collision.fromArea(
+              this.scene,
+              rect(
+                tile.x * layer.tileWidth * layer.tilemapLayer.scaleX,
+                tile.y * layer.tileHeight * layer.tilemapLayer.scaleY,
+                layer.tileWidth * layer.tilemapLayer.scaleX,
+                layer.tileHeight * layer.tilemapLayer.scaleY
+              )
             )
           );
         }
       });
     });
+  }
+
+  preUpdate() {
+    this.layers.forEach((l) => this.scene.add.existing(l));
+    this.collisions.forEach((c) => this.scene.add.existing(c));
+  }
+
+  destroy() {
+    this.map.destroy();
+    this.layers.forEach((l) => l.destroy());
+    this.collisions.forEach((c) => c.destroy());
+    super.destroy();
   }
 
   public forPoints(key: string, fn: (v: Phaser.Math.Vector2) => void): Tilemap {

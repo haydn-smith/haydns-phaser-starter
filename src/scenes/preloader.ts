@@ -78,12 +78,16 @@ export class Preloader extends Scene {
 
     // Start management scenes.
     // TODO: A transition manager scene.
+    // TODO: A parallax game object.
+    // TODO: A pathfinder game object.
+    // TODO: A "save game" feature.
+    // TODO: A flags example.
     this.scene.run(SCENE.SoundManager);
 
     // Allow the sound to play.
     this.sound.unlock();
 
     // Start game.
-    this.scene.start('Sound Example');
+    this.scene.start('Tilemap Example');
   }
 }
