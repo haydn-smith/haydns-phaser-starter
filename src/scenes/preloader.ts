@@ -82,6 +82,7 @@ export class Preloader extends Scene {
     // TODO: A pathfinder game object.
     // TODO: A "save game" feature.
     // TODO: A flags example.
+    // TODO: A "Requires WebGL" check.
     this.scene.run(SCENE.SoundManager);
 
     // Allow the sound to play.
