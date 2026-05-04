@@ -16,6 +16,8 @@ export class KeyboardInput extends Phaser.GameObjects.GameObject implements Inpu
   ) {
     super(scene, 'Keyboard Input');
 
+    this.setName(String(key));
+
     if (scene.input.keyboard) {
       this.key = this.scene.app().registerKeyboardKey(scene.input.keyboard, Number(key));
     }

@@ -1,4 +1,4 @@
-export function vec2(x: number, y: number): Phaser.Math.Vector2 {
+export function vec2(x: number, y?: number): Phaser.Math.Vector2 {
   return new Phaser.Math.Vector2(x, y);
 }
 

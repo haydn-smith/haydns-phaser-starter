@@ -78,7 +78,6 @@ export class Preloader extends Scene {
 
     // Start management scenes.
     // TODO: A transition manager scene.
-    // TODO: A parallax particles game object.
     // TODO: A pathfinder game object.
     // TODO: A "save game" feature.
     // TODO: A "Requires WebGL" check.

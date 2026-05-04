@@ -68,6 +68,8 @@ export class GamepadInput extends Phaser.GameObjects.GameObject implements Input
     private pad: TypeOfGamepad = Gamepad.One
   ) {
     super(scene, 'Gamepad Input');
+
+    this.setName(`${button}/${pad}`);
   }
 
   isPressed() {

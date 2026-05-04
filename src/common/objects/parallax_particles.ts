@@ -26,8 +26,6 @@ export class ParallaxParticles extends Phaser.GameObjects.Container {
     const position = vec2(camera.scrollX, camera.scrollY);
     const moved = this.lastCameraPosition.clone().subtract(position);
 
-    this.setPosition(position.x, position.y);
-
     Object.values(this.particles).forEach((particle) => {
       particle.particles.forEachAlive((p) => {
         p.setPosition(p.x + moved.x * particle.scrollFactor.x, p.y + moved.y * particle.scrollFactor.y);
@@ -52,9 +50,11 @@ export class ParallaxParticles extends Phaser.GameObjects.Container {
 
     if (existing) {
       existing.scrollFactor = scrollFactor;
-      existing.particles.updateConfig(config);
+      existing.particles.updateConfig(config).setTexture(texture);
     } else {
-      const particles = this.scene.add.particles(0, 0, texture, config).removeFromDisplayList();
+      const particles = this.scene.add
+        .particles(0, 0, texture, config)
+        .setScrollFactor(this.scrollFactorX, this.scrollFactorY);
       this.add(particles);
       this.particles[key] = {
         particles,
