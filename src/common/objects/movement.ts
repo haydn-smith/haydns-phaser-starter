@@ -18,7 +18,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
   constructor(
     public scene: Scene,
     private actor: Phaser.GameObjects.Container,
-    private collision: Collision
+    private collision: Collision | undefined = undefined
   ) {
     super(scene, 'Movement');
 
@@ -163,12 +163,16 @@ export class Movement extends Phaser.GameObjects.GameObject {
         y: this.speed * eased,
       });
 
-    const moveY = this.collision.moveY(this.easedVelocity.y * (delta * 0.001), (props) => {
-      this.onCollideFns.forEach((fn) => fn(props));
-    });
-    const moveX = this.collision.moveX(this.easedVelocity.x * (delta * 0.001), (props) => {
-      this.onCollideFns.forEach((fn) => fn(props));
-    });
+    const moveY = this.collision
+      ? this.collision.moveY(this.easedVelocity.y * (delta * 0.001), (props) => {
+          this.onCollideFns.forEach((fn) => fn(props));
+        })
+      : this.easedVelocity.y * (delta * 0.001);
+    const moveX = this.collision
+      ? this.collision.moveX(this.easedVelocity.x * (delta * 0.001), (props) => {
+          this.onCollideFns.forEach((fn) => fn(props));
+        })
+      : this.easedVelocity.x * (delta * 0.001);
 
     this.actor.setPosition(this.actor.x, this.actor.y + moveY);
     this.actor.setPosition(this.actor.x + moveX, this.actor.y);
