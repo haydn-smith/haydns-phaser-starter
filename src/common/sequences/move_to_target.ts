@@ -7,7 +7,8 @@ export class MoveToTarget implements Sequenceable {
 
   constructor(
     private movement: Movement,
-    private target: Phaser.Math.Vector2
+    private target: Phaser.Math.Vector2,
+    private threshold = 16
   ) {}
 
   reset(): void {
@@ -26,6 +27,9 @@ export class MoveToTarget implements Sequenceable {
   }
 
   isComplete(): boolean {
-    return this.target.clone().subtract(vec2(this.movement.getActor().x, this.movement.getActor().y)).length() < 8;
+    return (
+      this.target.clone().subtract(vec2(this.movement.getActor().x, this.movement.getActor().y)).length() <
+      this.threshold
+    );
   }
 }

@@ -14,6 +14,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
   private easeFn: (v: number) => number = Phaser.Math.Easing.Linear;
   private movementFn: MovementFn = linearMovement;
   private onCollideFns: OnCollideFn[] = [];
+  private hasCalledMovementFunctionThisTick = false;
 
   constructor(
     public scene: Scene,
@@ -46,7 +47,19 @@ export class Movement extends Phaser.GameObjects.GameObject {
         );
     }
 
+    if (!this.hasCalledMovementFunctionThisTick) {
+      this.velocity = this.movementFn({
+        currentVelocity: this.velocity.clone(),
+        direction: Phaser.Math.Vector2.ZERO,
+        delta,
+        speed: this.speed,
+        acceleration: this.acceleration,
+      });
+    }
+
     this.doMove(delta);
+
+    this.hasCalledMovementFunctionThisTick = false;
   }
 
   destroy() {
@@ -55,6 +68,8 @@ export class Movement extends Phaser.GameObjects.GameObject {
   }
 
   moveInDirection(direction: Phaser.Math.Vector2, delta: number, onCollide?: OnCollideFn) {
+    this.hasCalledMovementFunctionThisTick = true;
+
     this.velocity = this.movementFn({
       currentVelocity: this.velocity.clone(),
       direction,

@@ -48,11 +48,12 @@
         }
     },
     "last.exportedFilePath": "//wsl.localhost/Ubuntu/home/haydn/src/haydns-phaser-starter/public/assets/tilemaps/debug",
-    "map.lastUsedExportFilter": "All Files (*)",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "openFiles": [
         "//wsl.localhost/Ubuntu/home/haydn/src/haydns-phaser-starter/public/assets/tilemaps/debug/debug.tmx"
     ],
     "project": "",
+    "property.type": "bool",
     "recentFiles": [
         "//wsl.localhost/Ubuntu/home/haydn/src/haydns-phaser-starter/public/assets/tilemaps/debug/debug.tmx",
         "debug.tsx",

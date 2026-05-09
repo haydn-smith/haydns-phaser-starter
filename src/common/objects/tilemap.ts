@@ -1,8 +1,9 @@
-import { rect } from 'common/factories/phaser';
+import { rect, vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { scaled } from 'common/utils/scaled';
 import { TypeOfTilemap, TypeOfTileset } from 'constants';
 import { Collision } from './collision';
+import { Pathfinder } from './pathfinder';
 
 export class Tilemap extends Phaser.GameObjects.GameObject {
   private map: Phaser.Tilemaps.Tilemap;
@@ -10,6 +11,8 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
   private layers: Array<Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer> = [];
 
   private collisions: Collision[] = [];
+
+  private pathfinder: Pathfinder;
 
   constructor(
     public scene: Scene,
@@ -46,6 +49,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     this.map.destroy();
     this.layers.forEach((l) => l.destroy());
     this.collisions.forEach((c) => c.destroy());
+    this.pathfinder?.destroy();
     super.destroy();
   }
 
@@ -80,6 +84,61 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     return this;
   }
 
+  calculatePathfinder() {
+    this.pathfinder?.destroy();
+    this.pathfinder = this.scene.add.existing(new Pathfinder(this.scene));
+
+    const nodes: Phaser.Math.Vector2[][] = [];
+    this.map.layers.forEach((layer) => {
+      layer.tilemapLayer.forEachTile((tile) => {
+        const i = tile.x;
+        const j = tile.y;
+
+        nodes[i] = nodes[i] ?? [];
+
+        if (tile.properties['pathfinder']) {
+          const w = (layer.tileWidth * layer.tilemapLayer.scaleX) / 2;
+          const h = (layer.tileHeight * layer.tilemapLayer.scaleY) / 2;
+
+          nodes[i][j] = vec2(
+            layer.tilemapLayer.x + w + tile.x * layer.tileWidth * layer.tilemapLayer.scaleX,
+            layer.tilemapLayer.y + h + tile.y * layer.tileHeight * layer.tilemapLayer.scaleY
+          );
+        }
+      });
+    });
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = 0; j < nodes[i].length; j++) {
+        const current = nodes[i][j];
+
+        if (!current) continue;
+
+        const up = nodes[i][j - 1];
+        if (up) {
+          this.pathfinder.addPath(current, up);
+        }
+
+        const left = nodes[i - 1]?.[j];
+        if (left) {
+          this.pathfinder.addPath(current, left);
+        }
+
+        const upLeft = nodes[i - 1]?.[j - 1];
+        if (upLeft) {
+          this.pathfinder.addPath(current, upLeft);
+        }
+
+        const upRight = nodes[i + 1]?.[j - 1];
+        if (upRight) {
+          this.pathfinder.addPath(current, upRight);
+        }
+      }
+    }
+
+    return this;
+  }
+
   forPoints(key: string, fn: (v: Phaser.Math.Vector2) => void) {
     this.getPoints(key).forEach(fn);
 
@@ -90,6 +149,10 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     this.getAreas(key).forEach(fn);
 
     return this;
+  }
+
+  getPathfinder(): Pathfinder {
+    return this.pathfinder;
   }
 
   getLayer(name: string): Phaser.Tilemaps.TilemapLayer | Phaser.Tilemaps.TilemapGPULayer | undefined {
@@ -109,9 +172,12 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
     if (!points) return [];
 
-    return points.objects
-      .filter((p) => p.point && p.name === key)
-      .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(scaled())));
+    return (
+      points.objects
+        .filter((p) => p.point && p.name === key)
+        // TODO: This object needs a scale so we can accurately get these coordinates.
+        .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(4)).add(vec2(200, 200)))
+    );
   }
 
   getArea(key: string) {

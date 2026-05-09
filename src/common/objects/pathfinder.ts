@@ -1,7 +1,6 @@
 import { vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
 import { MoveToTarget } from 'common/sequences/move_to_target';
-import { RunCallback } from 'common/sequences/run_callback';
 import { aperture } from 'ramda';
 import { Movement } from './movement';
 import { Sequence } from './sequence';
@@ -31,9 +30,9 @@ export class Pathfinder extends Phaser.GameObjects.GameObject {
 
     this.edges.forEach((edge) => {
       this.graphics
-        .lineStyle(1, 0xff0000, 1)
+        .lineStyle(1, 0x0000ff, 1)
         .lineBetween(edge.from.x, edge.from.y, edge.to.x, edge.to.y)
-        .fillStyle(0xff0000, 1)
+        .fillStyle(0x0000ff, 1)
         .fillCircle(edge.to.x, edge.to.y, 4)
         .fillCircle(edge.from.x, edge.from.y, 4);
     });
@@ -60,15 +59,40 @@ export class Pathfinder extends Phaser.GameObjects.GameObject {
   }
 
   addGrid(from: Phaser.Math.Vector2, to: Phaser.Math.Vector2, step: number) {
-    const nodes: Phaser.Math.Vector2[] = [];
+    const nodes: Phaser.Math.Vector2[][] = [];
 
-    for (let i = from.x; i <= to.x; i = i + step) {
-      for (let j = from.y; j <= to.y; j = j + step) {
-        nodes.push(vec2(i, j));
+    for (let i = 0; i <= (to.x - from.x) / step; i++) {
+      for (let j = 0; j <= (to.y - from.y) / step; j++) {
+        nodes[i] = nodes[i] ?? [];
+        nodes[i][j] = vec2(from.x + i * step, from.y + j * step);
       }
     }
 
-    nodes.forEach((n1) => nodes.forEach((n2) => (n1 !== n2 ? this.addPath(n1, n2) : null)));
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = 0; j < nodes[i].length; j++) {
+        const current = nodes[i][j];
+
+        const up = nodes[i][j - 1];
+        if (up) {
+          this.addPath(current, up);
+        }
+
+        const left = nodes[i - 1]?.[j];
+        if (left) {
+          this.addPath(current, left);
+        }
+
+        const upLeft = nodes[i - 1]?.[j - 1];
+        if (upLeft) {
+          this.addPath(current, upLeft);
+        }
+
+        const upRight = nodes[i + 1]?.[j - 1];
+        if (upRight) {
+          this.addPath(current, upRight);
+        }
+      }
+    }
 
     return this;
   }
@@ -94,11 +118,7 @@ export class Pathfinder extends Phaser.GameObjects.GameObject {
 
     const nodes = this.aStar(this.edges, startPoint, endPoint, (node, to) => Math.abs(node.distance(to)));
 
-    this.lastPath = [
-      { from, to: startPoint },
-      ...aperture(2, nodes).map((o) => ({ from: o[0], to: o[1] })),
-      { from: endPoint, to },
-    ];
+    this.lastPath = [...aperture(2, nodes).map((o) => ({ from: o[0], to: o[1] }))];
     return [...this.lastPath];
   }
 
@@ -106,12 +126,7 @@ export class Pathfinder extends Phaser.GameObjects.GameObject {
     const paths = this.findPath(vec2(movement.getActor().x, movement.getActor().y), target);
 
     this.scene.add.existing(
-      new Sequence(this.scene, [
-        ...paths.map((p) => new MoveToTarget(movement, p.to)),
-        new RunCallback(() => movement.moveInDirection(Phaser.Math.Vector2.ZERO, 0)),
-      ])
-        .destroyWhenComplete()
-        .start()
+      new Sequence(this.scene, [...paths.map((p) => new MoveToTarget(movement, p.to))]).destroyWhenComplete().start()
     );
 
     return this;

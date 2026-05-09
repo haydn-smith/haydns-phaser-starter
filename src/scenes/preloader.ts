@@ -88,6 +88,6 @@ export class Preloader extends Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start('Pathfinder Example');
+    this.scene.start('Pathfinder Tilemap Example');
   }
 }

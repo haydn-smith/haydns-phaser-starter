@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="2">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="5">
  <editorsettings>
-  <export target="../public/assets/tilemaps/debug.json" format="json"/>
+  <export target="debug.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="debug" tilewidth="16" tileheight="16" spacing="16" margin="16" tilecount="9" columns="3">
   <image source="../debug.png" width="112" height="112"/>
@@ -10,8 +10,13 @@
     <property name="collision" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="6">
+   <properties>
+    <property name="pathfinder" type="bool" value="true"/>
+   </properties>
+  </tile>
  </tileset>
- <layer id="2" name="Background" width="20" height="20">
+ <layer id="2" name="Background" width="20" height="20" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -20,12 +25,12 @@
 0,0,0,0,5,5,5,5,5,5,5,5,5,5,5,5,0,0,0,0,
 0,0,0,0,5,5,5,5,5,5,5,5,5,5,5,5,0,0,0,0,
 0,0,0,0,5,5,1,2,2,2,2,2,2,3,5,5,0,0,0,0,
-0,0,0,0,5,5,4,0,0,0,0,0,0,6,5,5,0,0,0,0,
-0,0,0,0,5,5,4,0,0,0,0,0,0,6,5,5,0,0,0,0,
-0,0,0,0,5,5,4,0,0,0,0,0,0,6,5,5,0,0,0,0,
-0,0,0,0,5,5,4,0,0,0,0,0,0,6,5,5,0,0,0,0,
-0,0,0,0,5,5,4,0,0,0,0,0,0,6,5,5,0,0,0,0,
-0,0,0,0,5,5,4,0,0,0,0,0,0,6,5,5,0,0,0,0,
+0,0,0,0,5,5,4,7,7,7,7,7,7,6,5,5,0,0,0,0,
+0,0,0,0,5,5,4,7,7,7,7,7,7,6,5,5,0,0,0,0,
+0,0,0,0,5,5,4,7,7,7,7,7,7,6,5,5,0,0,0,0,
+0,0,0,0,5,5,4,7,7,7,7,7,7,6,5,5,0,0,0,0,
+0,0,0,0,5,5,4,7,7,7,7,7,7,6,5,5,0,0,0,0,
+0,0,0,0,5,5,4,7,7,7,7,7,7,6,5,5,0,0,0,0,
 0,0,0,0,5,5,7,8,8,8,8,8,8,9,5,5,0,0,0,0,
 0,0,0,0,5,5,5,5,5,5,5,5,5,5,5,5,0,0,0,0,
 0,0,0,0,5,5,5,5,5,5,5,5,5,5,5,5,0,0,0,0,
@@ -35,7 +40,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="1" name="Foreground" width="20" height="20">
+ <layer id="1" name="Foreground" width="20" height="20" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -59,7 +64,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="3" name="Objects">
+ <objectgroup id="3" name="Objects" locked="1">
   <object id="1" name="Player Start" x="160" y="160">
    <point/>
   </object>
