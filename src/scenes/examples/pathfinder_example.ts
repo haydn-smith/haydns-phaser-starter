@@ -1,12 +1,11 @@
 import { vec2 } from 'common/factories/phaser';
 import { Movement } from 'common/objects/movement';
 import { Pathfinder } from 'common/objects/pathfinder';
+import { Sequence } from 'common/objects/sequence';
 import { Scene } from 'common/scene';
+import { MoveAlongPath } from 'common/sequences/move_along_path';
 import { linearMovement } from 'common/utils/movement_functions';
 
-// TODO: Does the pathfinder leak game obejcts?
-// TODO: Clicking multiple times does not cancel the last move along
-// path call. Perhaps it should belong to `Movement`?
 export class PathfinderExample extends Scene {
   constructor() {
     super('Pathfinder Example');
@@ -30,8 +29,19 @@ export class PathfinderExample extends Scene {
       .addGrid(vec2(1000, 100), vec2(1100, 700), 100)
       .addGrid(vec2(1100, 100), vec2(1200, 300), 100);
 
+    // Sequence.
+    let sequence: Sequence | undefined;
+
     this.input.on('pointerdown', (pointer) => {
-      pathfinder.moveAlongPath(movement, vec2(pointer.worldX, pointer.worldY));
+      // We can use the pathfinder to find paths to and from points.
+      const path = pathfinder.findPath(vec2(dot.x, dot.y), vec2(pointer.worldX, pointer.worldY));
+
+      // We can use sequences to navigate items along these paths.
+      sequence?.destroy();
+      sequence = this.add
+        .existing(new Sequence(this, [new MoveAlongPath(movement, path)]))
+        .destroyWhenComplete()
+        .start();
     });
   }
 }

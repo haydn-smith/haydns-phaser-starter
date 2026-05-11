@@ -35,8 +35,9 @@ export class TilemapExample extends Scene {
 
     // Set layer properties.
     this.input.keyboard?.on('keydown-F', () => {
-      tilemap1.getLayer('Background')?.setDepth(DEPTH.Background).setScale(1).setPosition(400, 400);
-      tilemap1.getLayer('Foreground')?.setScrollFactor(2).setDepth(DEPTH.Foreground).setScale(2).setPosition(200, 200);
+      tilemap1.setScale(1).setPosition(400, 400);
+      tilemap1.getLayer('Foreground')?.setDepth(DEPTH.Foreground).setScrollFactor(2).setScale(2);
+      tilemap1.getLayer('Background')?.setDepth(DEPTH.Background).setScrollFactor(1).setScale(2);
       tilemap1.recalculateCollision();
       tilemap1.calculatePathfinder();
     });

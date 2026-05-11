@@ -13,6 +13,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
   private speed: number = 240;
   private easeFn: (v: number) => number = Phaser.Math.Easing.Linear;
   private movementFn: MovementFn = linearMovement;
+  private collideFn?: OnCollideFn;
   private onCollideFns: OnCollideFn[] = [];
   private hasCalledMovementFunctionThisTick = false;
 
@@ -60,6 +61,7 @@ export class Movement extends Phaser.GameObjects.GameObject {
     this.doMove(delta);
 
     this.hasCalledMovementFunctionThisTick = false;
+    this.onCollideFns = [];
   }
 
   destroy() {
@@ -162,6 +164,12 @@ export class Movement extends Phaser.GameObjects.GameObject {
     return this;
   }
 
+  setOnCollide(collideFn: OnCollideFn) {
+    this.collideFn = collideFn;
+
+    return this;
+  }
+
   private doMove(delta: number) {
     if (!this.velocity.equals(Phaser.Math.Vector2.ZERO)) {
       this.lastMovementDirection = this.velocity.clone().normalize();
@@ -180,18 +188,18 @@ export class Movement extends Phaser.GameObjects.GameObject {
 
     const moveY = this.collision
       ? this.collision.moveY(this.easedVelocity.y * (delta * 0.001), (props) => {
+          this.collideFn?.(props);
           this.onCollideFns.forEach((fn) => fn(props));
         })
       : this.easedVelocity.y * (delta * 0.001);
     const moveX = this.collision
       ? this.collision.moveX(this.easedVelocity.x * (delta * 0.001), (props) => {
+          this.collideFn?.(props);
           this.onCollideFns.forEach((fn) => fn(props));
         })
       : this.easedVelocity.x * (delta * 0.001);
 
     this.actor.setPosition(this.actor.x, this.actor.y + moveY);
     this.actor.setPosition(this.actor.x + moveX, this.actor.y);
-
-    this.onCollideFns = [];
   }
 }

@@ -12,7 +12,11 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
   private collisions: Collision[] = [];
 
-  private pathfinder: Pathfinder;
+  private pathfinder?: Pathfinder;
+
+  private scale = 1;
+
+  private position = Phaser.Math.Vector2.ZERO;
 
   constructor(
     public scene: Scene,
@@ -84,6 +88,9 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     return this;
   }
 
+  /**
+   * Creates a `Pathfinder` with nodes that correspond to tiles that have `pathfinder` set to `true` in the tilemap.
+   */
   calculatePathfinder() {
     this.pathfinder?.destroy();
     this.pathfinder = this.scene.add.existing(new Pathfinder(this.scene));
@@ -139,6 +146,30 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     return this;
   }
 
+  getPosition() {
+    return this.position;
+  }
+
+  setPosition(x: number, y: number) {
+    this.position = vec2(x, y);
+
+    this.layers.forEach((l) => l.setPosition(x, y));
+
+    return this;
+  }
+
+  getScale() {
+    return this.scale;
+  }
+
+  setScale(scale: number) {
+    this.scale = scale;
+
+    this.layers.forEach((l) => l.setScale(scale));
+
+    return this;
+  }
+
   forPoints(key: string, fn: (v: Phaser.Math.Vector2) => void) {
     this.getPoints(key).forEach(fn);
 
@@ -151,7 +182,7 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     return this;
   }
 
-  getPathfinder(): Pathfinder {
+  getPathfinder(): Pathfinder | undefined {
     return this.pathfinder;
   }
 
@@ -172,12 +203,9 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
 
     if (!points) return [];
 
-    return (
-      points.objects
-        .filter((p) => p.point && p.name === key)
-        // TODO: This object needs a scale so we can accurately get these coordinates.
-        .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(4)).add(vec2(200, 200)))
-    );
+    return points.objects
+      .filter((p) => p.point && p.name === key)
+      .map((p) => new Phaser.Math.Vector2(p.x, p.y).multiply(new Phaser.Math.Vector2(this.scale)).add(this.position));
   }
 
   getArea(key: string) {
@@ -193,7 +221,12 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
       .filter((a) => a.rectangle && a.name === key)
       .map(
         (a) =>
-          new Phaser.Geom.Rectangle(scaled(a?.x ?? 0), scaled(a?.y ?? 0), scaled(a?.width ?? 0), scaled(a?.height ?? 0))
+          new Phaser.Geom.Rectangle(
+            (a.x ?? 0) + this.position.x,
+            (a.y ?? 0) + this.position.y,
+            (a.width ?? 0) * this.scale,
+            (a.height ?? 0) * this.scale
+          )
       );
   }
 }

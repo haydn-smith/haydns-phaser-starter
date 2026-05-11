@@ -78,16 +78,17 @@ export class Preloader extends Scene {
 
     // Start management scenes.
     // TODO: A transition manager scene.
-    // TODO: A pathfinder game object.
     // TODO: A "save game" feature.
     // TODO: A "Requires WebGL" check.
     // TODO: A studio logo.
+    // TODO: Make game objects response the SCALE constant.
+    // TODO: Tilemap to support multiple object layers.
     this.scene.run(SCENE.SoundManager);
 
     // Allow the sound to play.
     this.sound.unlock();
 
     // Start game.
-    this.scene.start('Pathfinder Tilemap Example');
+    this.scene.start('Tilemap Example');
   }
 }

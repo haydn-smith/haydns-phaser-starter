@@ -5,7 +5,7 @@ import { aperture } from 'ramda';
 import { Movement } from './movement';
 import { Sequence } from './sequence';
 
-type Edge = {
+export type Edge = {
   from: Phaser.Math.Vector2;
   to: Phaser.Math.Vector2;
 };
