@@ -1,3 +1,5 @@
+export const APP_ID = "com.badmojoverybad.haydns-phaser-starter";
+
 export const DEPTH = {
   Background: 1000,
   Main: 2000,
@@ -85,12 +87,6 @@ export type KeyOfCollisionMask = keyof typeof COLLISION_MASK;
 export type TypeOfCollisionMask = (typeof COLLISION_MASK)[KeyOfCollisionMask];
 
 export const GLOBAL_SCALE = 1;
-
-export const FLAG = {
-  Debug: 'debug',
-} as const;
-export type KeyOfFlag = keyof typeof FLAG;
-export type TypeOfFlag = (typeof FLAG)[KeyOfFlag];
 
 export const SOUND = {
   Activate: 'audio/activate.mp3',

@@ -3,9 +3,9 @@ export function logEvent(log: string, ...rest: unknown[]): void {
 }
 
 export function logDebug(log: string, ...rest: unknown[]): void {
-  console.log(`DEBUG: ${log}`, ...rest);
+  console.log(`Debug: ${log}`, ...rest);
 }
 
 export function logWarn(log: string, ...rest: unknown[]): void {
-  console.warn(`WARN: ${log}`, ...rest);
+  console.warn(`Warn: ${log}`, ...rest);
 }

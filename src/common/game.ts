@@ -1,6 +1,8 @@
-import { TypeOfFlag } from 'constants';
 import { GUI } from 'lil-gui';
+import { Saver } from './contracts/saver';
 import { TypeOfKeyCode } from './objects/input/keyboard_input';
+import { SaveData } from './save_data';
+import { LocalStorageSaver } from './savers/local_storage_saver';
 import { logEvent } from './utils/log';
 
 export class Game extends Phaser.Game {
@@ -8,38 +10,25 @@ export class Game extends Phaser.Game {
 
   private gui?: GUI;
 
-  private flags: Partial<Record<TypeOfFlag, boolean>> = {};
-
   private keys: Record<number, Phaser.Input.Keyboard.Key> = {};
 
-  constructor(config?: Phaser.Types.Core.GameConfig & { debug: true }) {
+  private saver: Saver;
+
+  private saveData: SaveData;
+
+  constructor(config?: Phaser.Types.Core.GameConfig & { debug?: boolean; saver?: Saver }) {
     super(config);
 
     this.debug = config?.debug ?? false;
-  }
+    this.saver = config?.saver ?? new LocalStorageSaver();
 
-  checkFlag(flag: TypeOfFlag): boolean {
-    return this.flags[flag] ?? false;
-  }
+    // Initialise persisted data.
+    this.load();
 
-  setFlag(flag: TypeOfFlag) {
-    if (this.checkFlag(flag)) return;
-
-    logEvent('Setting flag.', flag);
-
-    this.flags[flag] = true;
-
-    return this;
-  }
-
-  unsetFlag(flag: TypeOfFlag) {
-    if (!this.checkFlag(flag)) return;
-
-    logEvent('Un-setting flag.', flag);
-
-    this.flags[flag] = false;
-
-    return this;
+    // Save persisted data when the window closes.
+    window.addEventListener('beforeunload', () => {
+      this.save();
+    });
   }
 
   setDebug(debug: boolean = true) {
@@ -100,5 +89,25 @@ export class Game extends Phaser.Game {
     this.keys[key?.keyCode ?? 0] = key;
 
     return key;
+  }
+
+  load() {
+    logEvent('Loading game.');
+
+    this.saveData = this.saver.load();
+
+    return this;
+  }
+
+  save() {
+    logEvent('Saving game.');
+
+    this.saver.save(this.saveData);
+
+    return this;
+  }
+
+  data() {
+    return this.saveData;
   }
 }

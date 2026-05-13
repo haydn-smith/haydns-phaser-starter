@@ -5,12 +5,12 @@ import 'phaser';
 import { Boot } from 'scenes/boot';
 import { CameraExample } from 'scenes/examples/camera_example';
 import { CollisionExample } from 'scenes/examples/collision_example';
-import { FlagsExample } from 'scenes/examples/flags_example';
 import { InputExample } from 'scenes/examples/input_example';
 import { MovementExample } from 'scenes/examples/movement_example';
 import { ParallaxParticlesExample } from 'scenes/examples/parallax_particles_example';
 import { PathfinderExample } from 'scenes/examples/pathfinder_example';
 import { PathfinderTilemapExample } from 'scenes/examples/pathfinder_tilemap_example';
+import { SaveExample } from 'scenes/examples/save_example';
 import { SoundExample } from 'scenes/examples/sound_example';
 import { TilemapExample } from 'scenes/examples/tilemap_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
@@ -68,10 +68,10 @@ const config: Phaser.Types.Core.GameConfig = {
     MovementExample,
     SoundExample,
     TilemapExample,
-    FlagsExample,
     ParallaxParticlesExample,
     PathfinderExample,
     PathfinderTilemapExample,
+    SaveExample,
   ],
 };
 

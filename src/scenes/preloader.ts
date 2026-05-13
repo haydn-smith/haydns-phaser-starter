@@ -78,7 +78,7 @@ export class Preloader extends Scene {
 
     // Start management scenes.
     // TODO: A transition manager scene.
-    // TODO: A "save game" feature.
+    // TODO: An input scene.
     // TODO: A "Requires WebGL" check.
     // TODO: A studio logo.
     // TODO: Make game objects response the SCALE constant.
@@ -89,6 +89,6 @@ export class Preloader extends Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start('Tilemap Example');
+    this.scene.start('Save Example');
   }
 }
