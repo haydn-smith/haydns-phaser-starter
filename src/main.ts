@@ -16,6 +16,8 @@ import { TilemapExample } from 'scenes/examples/tilemap_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
 import { Preloader } from 'scenes/preloader';
 import { SoundManager } from 'scenes/sound_manager';
+import { StudioLogo } from 'scenes/studio_logo';
+import { WebglCheck } from 'scenes/webgl_check';
 
 // @ts-expect-error Injected environment variable.
 if (process.env.PHASER_SENTRY_DSN) {
@@ -59,6 +61,8 @@ const config: Phaser.Types.Core.GameConfig = {
     // All scenes that can be started in the game.
     Boot,
     Preloader,
+    StudioLogo,
+    WebglCheck,
     SoundManager,
     // Example scenes.
     TypewriterExample,

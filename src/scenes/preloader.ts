@@ -49,6 +49,7 @@ export class Preloader extends Scene {
     // Sprites.
     this.load.image(SPRITE.Black1px, SPRITE.Black1px);
     this.load.image(SPRITE.White1px, SPRITE.White1px);
+    this.load.image(SPRITE.StudioLogo, SPRITE.StudioLogo);
     this.load.spritesheet(SPRITE.DebugPlayer, SPRITE.DebugPlayer, {
       frameWidth: 16,
     });
@@ -79,8 +80,6 @@ export class Preloader extends Scene {
     // Start management scenes.
     // TODO: A transition manager scene.
     // TODO: An input scene.
-    // TODO: A "Requires WebGL" check.
-    // TODO: A studio logo.
     // TODO: Make game objects response the SCALE constant.
     // TODO: Tilemap to support multiple object layers.
     this.scene.run(SCENE.SoundManager);
@@ -89,6 +88,6 @@ export class Preloader extends Scene {
     this.sound.unlock();
 
     // Start game.
-    this.scene.start('Save Example');
+    this.scene.start(SCENE.StudioLogo);
   }
 }

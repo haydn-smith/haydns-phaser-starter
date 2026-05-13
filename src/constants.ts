@@ -1,4 +1,4 @@
-export const APP_ID = "com.badmojoverybad.haydns-phaser-starter";
+export const APP_ID = 'com.badmojoverybad.haydns-phaser-starter';
 
 export const DEPTH = {
   Background: 1000,
@@ -23,9 +23,8 @@ export type TypeOfAction = (typeof ACTION)[KeyOfAction];
 export const SCENE = {
   Boot: 'Boot',
   Preloader: 'Preloader',
-  MainMenu: 'Main Menu',
-  UserInterface: 'User Interface',
-  Debug: 'Debug',
+  StudioLogo: 'Studio Logo',
+  WebglCheck: 'WebGL Check',
   SoundManager: 'Sound Manager',
 } as const;
 export type KeyOfScene = keyof typeof SCENE;
@@ -48,6 +47,7 @@ export const SPRITE = {
   White1px: 'sprites/white_pixel.png',
   DebugPlayer: 'sprites/debug_player.png',
   ZButton: 'sprites/z_button.png',
+  StudioLogo: 'sprites/studio_logo.png',
 } as const;
 export type KeyOfSprite = keyof typeof SPRITE;
 export type TypeOfSprite = (typeof SPRITE)[KeyOfSprite];
