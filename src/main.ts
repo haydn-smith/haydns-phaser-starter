@@ -1,4 +1,6 @@
 import * as Sentry from '@sentry/browser';
+import { CheckerFilter } from 'common/filters/checker';
+import { WipeFilter } from 'common/filters/wipe';
 import { Game } from 'common/game';
 import 'phaser';
 
@@ -13,10 +15,12 @@ import { PathfinderTilemapExample } from 'scenes/examples/pathfinder_tilemap_exa
 import { SaveExample } from 'scenes/examples/save_example';
 import { SoundExample } from 'scenes/examples/sound_example';
 import { TilemapExample } from 'scenes/examples/tilemap_example';
+import { TransitionExample } from 'scenes/examples/transition_example';
 import { TypewriterExample } from 'scenes/examples/typewriter_example';
 import { Preloader } from 'scenes/preloader';
 import { SoundManager } from 'scenes/sound_manager';
 import { StudioLogo } from 'scenes/studio_logo';
+import { TransitionManager } from 'scenes/transition_manager';
 import { WebglCheck } from 'scenes/webgl_check';
 
 // @ts-expect-error Injected environment variable.
@@ -57,6 +61,10 @@ const config: Phaser.Types.Core.GameConfig = {
   input: {
     gamepad: true,
   },
+  renderNodes: {
+    Wipe: WipeFilter,
+    Checker: CheckerFilter,
+  },
   scene: [
     // All scenes that can be started in the game.
     Boot,
@@ -64,6 +72,7 @@ const config: Phaser.Types.Core.GameConfig = {
     StudioLogo,
     WebglCheck,
     SoundManager,
+    TransitionManager,
     // Example scenes.
     TypewriterExample,
     CameraExample,
@@ -76,6 +85,7 @@ const config: Phaser.Types.Core.GameConfig = {
     PathfinderExample,
     PathfinderTilemapExample,
     SaveExample,
+    TransitionExample,
   ],
 };
 

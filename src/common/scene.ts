@@ -1,5 +1,6 @@
 import { SCENE } from 'constants';
 import { SoundManager } from 'scenes/sound_manager';
+import { TransitionManager } from 'scenes/transition_manager';
 import { Game } from './game';
 
 export class Scene extends Phaser.Scene {
@@ -40,7 +41,11 @@ export class Scene extends Phaser.Scene {
     ]);
   }
 
-  soundManager() {
+  audio() {
     return this.scene.get<SoundManager>(SCENE.SoundManager);
+  }
+
+  transition() {
+    return this.scene.get<TransitionManager>(SCENE.TransitionManager);
   }
 }

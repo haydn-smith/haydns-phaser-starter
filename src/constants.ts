@@ -26,6 +26,7 @@ export const SCENE = {
   StudioLogo: 'Studio Logo',
   WebglCheck: 'WebGL Check',
   SoundManager: 'Sound Manager',
+  TransitionManager: 'Transition Manager',
 } as const;
 export type KeyOfScene = keyof typeof SCENE;
 export type TypeOfScene = (typeof SCENE)[KeyOfScene];

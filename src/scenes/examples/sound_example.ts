@@ -12,10 +12,10 @@ export class SoundExample extends Scene {
       this.sound.play(SOUND.Activate);
     });
 
-    // Register/retrieve a souund singleton. This is a sound that exists only once in the game, persists between scenes,
+    // Register/retrieve a sound singleton. This is a sound that exists only once in the game, persists between scenes,
     // and can not be played over the top of itself. Good for ambience, and music. It is never destroyed, unless the
     // scene manager is shut down.
-    const singletonSound = this.soundManager().singleton(SOUND.Activate);
+    const singletonSound = this.audio().singleton(SOUND.Activate);
 
     // Play the sound once.
     this.input.keyboard?.on('keydown-Q', () => {
@@ -44,12 +44,12 @@ export class SoundExample extends Scene {
 
     // Fade the volume.
     this.input.keyboard?.on('keydown-Y', () => {
-      this.soundManager().fade(singletonSound, 0.2, 1000);
+      this.audio().fade(singletonSound, 0.2, 1000);
     });
 
     // Fade the volume.
     this.input.keyboard?.on('keydown-U', () => {
-      this.soundManager().fade(singletonSound, 1, 1000);
+      this.audio().fade(singletonSound, 1, 1000);
     });
 
     // Restart the scene. Notice that the singleton sound is not destroyed, and continues playing when when this scene

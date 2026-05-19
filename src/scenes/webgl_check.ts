@@ -8,7 +8,7 @@ export class WebglCheck extends Scene {
 
   create() {
     if (this.app().renderer.type === Phaser.WEBGL) {
-      this.scene.start('Save Example');
+      this.scene.start('Transition Example');
     } else {
       const text = this.add
         .bitmapText(50, 50, FONT.MonogramWhite, 'This game is not supported by your browser.')

@@ -78,11 +78,10 @@ export class Preloader extends Scene {
     });
 
     // Start management scenes.
-    // TODO: A transition manager scene.
-    // TODO: An input scene.
     // TODO: Make game objects response the SCALE constant.
     // TODO: Tilemap to support multiple object layers.
     this.scene.run(SCENE.SoundManager);
+    this.scene.run(SCENE.TransitionManager);
 
     // Allow the sound to play.
     this.sound.unlock();

@@ -1,0 +1,93 @@
+import { CheckerController } from 'common/filters/checker';
+import { WipeController } from 'common/filters/wipe';
+import { Sequence } from 'common/objects/sequence';
+import { Scene } from 'common/scene';
+import { RunCallback } from 'common/sequences/run_callback';
+import { RunTween } from 'common/sequences/run_tween';
+import { logWarn } from 'common/utils/log';
+import { randomInt } from 'common/utils/math';
+import { SCENE, TypeOfScene } from 'constants';
+
+export type Transition = 'Diagonal Wipe' | 'Wipe';
+
+export class TransitionManager extends Scene {
+  private isTransitioning = false;
+  private wipeController: WipeController;
+  private checkerController: CheckerController;
+
+  constructor() {
+    super(SCENE.TransitionManager);
+  }
+
+  create() {
+    const camera = this.cameras.main;
+
+    this.wipeController = new WipeController(camera);
+    this.checkerController = new CheckerController(camera);
+
+    this.app().controlNumber('Wipe Progress', this.wipeController, 'progress', 0, 1);
+    this.app().controlNumber('Checker Progress', this.checkerController, 'progress', 0, 1);
+
+    camera.filters.external.add(this.wipeController);
+    camera.filters.external.add(this.checkerController);
+  }
+
+  update() {
+    this.scene.bringToTop(this);
+  }
+
+  runScene(from: Scene, to: TypeOfScene) {
+    this.run(() => from.scene.start(to));
+
+    return this;
+  }
+
+  run(fn: () => void) {
+    if (this.isTransitioning) {
+      logWarn('Already transitioning.');
+
+      return;
+    }
+
+    let controller = [this.wipeController, this.checkerController][randomInt(0, 1)];
+
+    this.add
+      .existing(
+        new Sequence(this, [
+          new RunCallback(() => (this.isTransitioning = true)),
+          new RunTween(this, {
+            targets: controller,
+            ease: Phaser.Math.Easing.Quintic.InOut,
+            duration: 600,
+            props: { value: { from: 0, to: 1 } },
+            onUpdate: (tween, target, key, current: number) => {
+              controller.progress = current;
+            },
+          }),
+          new RunCallback(() => {
+            fn();
+
+            controller = [this.wipeController, this.checkerController][randomInt(0, 1)];
+
+            [this.wipeController, this.checkerController].forEach((c) => {
+              c.progress = c === controller ? 1 : 0;
+            });
+          }),
+          new RunTween(this, {
+            targets: controller,
+            ease: Phaser.Math.Easing.Quintic.InOut,
+            duration: 600,
+            props: { value: { from: 1, to: 0 } },
+            onUpdate: (tween, target, key, current) => {
+              controller.progress = current;
+            },
+          }),
+          new RunCallback(() => (this.isTransitioning = false)),
+        ])
+      )
+      .destroyWhenComplete()
+      .start();
+
+    return this;
+  }
+}

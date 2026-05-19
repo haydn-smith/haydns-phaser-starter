@@ -31,8 +31,7 @@ export class StudioLogo extends Scene {
           duration: 500,
           alpha: 0,
         }),
-        new Wait(500),
-        new RunCallback(() => this.scene.start(SCENE.WebglCheck)),
+        new RunCallback(() => this.transition().runScene(this, SCENE.WebglCheck)),
       ])
         .destroyWhenComplete()
         .start()
