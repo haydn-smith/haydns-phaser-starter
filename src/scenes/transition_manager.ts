@@ -49,12 +49,14 @@ export class TransitionManager extends Scene {
       return;
     }
 
-    let controller = [this.wipeController, this.checkerController][randomInt(0, 1)];
+    let controller = this.freshTransition();
 
     this.add
       .existing(
         new Sequence(this, [
-          new RunCallback(() => (this.isTransitioning = true)),
+          new RunCallback(() => {
+            this.isTransitioning = true;
+          }),
           new RunTween(this, {
             targets: controller,
             ease: Phaser.Math.Easing.Quintic.InOut,
@@ -67,7 +69,7 @@ export class TransitionManager extends Scene {
           new RunCallback(() => {
             fn();
 
-            controller = [this.wipeController, this.checkerController][randomInt(0, 1)];
+            controller = this.freshTransition();
 
             [this.wipeController, this.checkerController].forEach((c) => {
               c.progress = c === controller ? 1 : 0;
@@ -82,12 +84,26 @@ export class TransitionManager extends Scene {
               controller.progress = current;
             },
           }),
-          new RunCallback(() => (this.isTransitioning = false)),
+          new RunCallback(() => {
+            this.isTransitioning = false;
+          }),
         ])
       )
       .destroyWhenComplete()
       .start();
 
     return this;
+  }
+
+  private freshTransition(): Phaser.Filters.Controller & {progress: number}{
+    const controller = [
+      // Controllers.
+      this.wipeController,
+      this.checkerController,
+    ][randomInt(0, 1)];
+
+    controller.randomise();
+
+    return controller;
   }
 }

@@ -1,3 +1,5 @@
+import { randomInt } from "common/utils/math";
+
 const filterName = 'Wipe';
 
 const fragShader = `
@@ -10,6 +12,7 @@ uniform sampler2D uMainSampler;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform float uProgress;
+uniform float uDirection;
 
 varying vec2 outTexCoord;
 
@@ -34,10 +37,18 @@ void main()
   vec4 pixel = texture2D(uMainSampler, uv);
 
   // Set this value to change the color and alpha of the current pixel.
-  if (pos.x < (screen.x * uProgress) - pos.y / 3.0 + ((screen.x / 3.0) * uProgress)) {
-    gl_FragColor = vec4(0, 0, 0, 1);
+  if (uDirection == 1.0) {
+    if (pos.x < (screen.x * (uProgress)) - (pos.y / 3.0) + ((screen.x / 3.0) * (uProgress))) {
+      gl_FragColor = vec4(0, 0, 0, 1);
+    } else {
+      gl_FragColor = vec4(pixel);
+    }
   } else {
-    gl_FragColor = vec4(pixel);
+    if (pos.x > (screen.x * (1.0 - uProgress)) - ((screen.y - pos.y) / 3.0) + ((screen.y / 3.0) * (1.0 - uProgress))) {
+      gl_FragColor = vec4(0, 0, 0, 1);
+    } else {
+      gl_FragColor = vec4(pixel);
+    }
   }
 }
 `;
@@ -45,8 +56,14 @@ void main()
 export class WipeController extends Phaser.Filters.Controller {
   progress = 0;
 
+  direction = 1;
+
   constructor(camera: Phaser.Cameras.Scene2D.Camera) {
     super(camera, filterName);
+  }
+
+  randomise() {
+    this.direction = randomInt(0,1);
   }
 }
 
@@ -61,5 +78,6 @@ export class WipeFilter extends Phaser.Renderer.WebGL.RenderNodes.BaseFilterShad
     programManager.setUniform('uResolution', [drawingContext.width, drawingContext.height]);
     programManager.setUniform('uTime', drawingContext.renderer.game.loop.time / 1000);
     programManager.setUniform('uProgress', controller.progress);
+    programManager.setUniform('uDirection', controller.direction);
   }
 }
