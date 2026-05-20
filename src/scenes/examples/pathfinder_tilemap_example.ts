@@ -46,9 +46,13 @@ export class PathfinderTilemapExample extends Scene {
     // Sequence.
     let sequence: Sequence | undefined;
 
-    this.input.on('pointerdown', (pointer) => {
+    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       // We can use the pathfinder to find paths to and from points.
-      const path = tilemap1.getPathfinder().findPath(vec2(dot.x, dot.y), vec2(pointer.worldX, pointer.worldY));
+      const path = tilemap1.getPathfinder()?.findPath(vec2(dot.x, dot.y), vec2(pointer.worldX, pointer.worldY));
+
+      if (!path) {
+        return;
+      }
 
       // We can use sequences to navigate items along these paths.
       sequence?.destroy();

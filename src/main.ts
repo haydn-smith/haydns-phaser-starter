@@ -61,6 +61,7 @@ const config: Phaser.Types.Core.GameConfig = {
   input: {
     gamepad: true,
   },
+  // @ts-expect-error The new filter system in Phaser 4 does not appear to have types here yet.
   renderNodes: {
     Wipe: WipeFilter,
     Checker: CheckerFilter,

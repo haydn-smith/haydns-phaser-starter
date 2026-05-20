@@ -1,7 +1,7 @@
-import { Data } from 'common/data';
+import { SaveData } from 'common/save_data';
 
 export interface Saver {
-  load(): Data;
+  load(): SaveData;
 
-  save(state: Data): void;
+  save(state: SaveData): void;
 }

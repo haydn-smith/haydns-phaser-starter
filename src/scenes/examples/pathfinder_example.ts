@@ -32,7 +32,7 @@ export class PathfinderExample extends Scene {
     // Sequence.
     let sequence: Sequence | undefined;
 
-    this.input.on('pointerdown', (pointer) => {
+    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       // We can use the pathfinder to find paths to and from points.
       const path = pathfinder.findPath(vec2(dot.x, dot.y), vec2(pointer.worldX, pointer.worldY));
 

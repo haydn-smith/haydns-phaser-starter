@@ -1,4 +1,4 @@
-import { randomInt } from "common/utils/math";
+import { randomInt } from 'common/utils/math';
 
 const filterName = 'Wipe';
 
@@ -63,7 +63,7 @@ export class WipeController extends Phaser.Filters.Controller {
   }
 
   randomise() {
-    this.direction = randomInt(0,1);
+    this.direction = randomInt(0, 1);
   }
 }
 

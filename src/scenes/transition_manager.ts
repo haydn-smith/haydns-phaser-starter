@@ -62,7 +62,7 @@ export class TransitionManager extends Scene {
             ease: Phaser.Math.Easing.Quintic.InOut,
             duration: 600,
             props: { value: { from: 0, to: 1 } },
-            onUpdate: (tween, target, key, current: number) => {
+            onUpdate: (_tween: unknown, _target: unknown, _key: string, current: number) => {
               controller.progress = current;
             },
           }),
@@ -80,7 +80,7 @@ export class TransitionManager extends Scene {
             ease: Phaser.Math.Easing.Quintic.InOut,
             duration: 600,
             props: { value: { from: 1, to: 0 } },
-            onUpdate: (tween, target, key, current) => {
+            onUpdate: (_tween: unknown, _target: unknown, _key: string, current: number) => {
               controller.progress = current;
             },
           }),
@@ -95,7 +95,7 @@ export class TransitionManager extends Scene {
     return this;
   }
 
-  private freshTransition(): Phaser.Filters.Controller & {progress: number}{
+  private freshTransition(): Phaser.Filters.Controller & { progress: number } {
     const controller = [
       // Controllers.
       this.wipeController,

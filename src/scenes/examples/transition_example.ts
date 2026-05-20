@@ -8,8 +8,8 @@ export class TransitionExample extends Scene {
     super('Transition Example');
   }
 
-  init(data: any) {
-    this.count = data?.count ?? 0;
+  init(data: unknown) {
+    this.count = data && typeof data === 'object' && 'count' in data && typeof data.count === 'number' ? data.count : 0;
   }
 
   create() {

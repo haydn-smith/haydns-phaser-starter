@@ -1,4 +1,4 @@
-import { randomInt } from "common/utils/math";
+import { randomInt } from 'common/utils/math';
 
 const filterName = 'Checker';
 
@@ -94,8 +94,8 @@ export class CheckerController extends Phaser.Filters.Controller {
     super(camera, filterName);
   }
 
- randomise() {
-   this.direction = randomInt(0, 3);
+  randomise() {
+    this.direction = randomInt(0, 3);
   }
 }
 
