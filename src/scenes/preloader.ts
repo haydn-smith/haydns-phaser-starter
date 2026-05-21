@@ -78,8 +78,6 @@ export class Preloader extends Scene {
     });
 
     // Start management scenes.
-    // TODO: Make game objects response the SCALE constant.
-    // TODO: Tilemap to support multiple object layers.
     this.scene.run(SCENE.SoundManager);
     this.scene.run(SCENE.TransitionManager);
 

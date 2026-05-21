@@ -1,5 +1,4 @@
 import { Scene } from 'common/scene';
-import { scaled } from 'common/utils/scaled';
 import { ANIMATION, FONT, TypeOfFont } from 'constants';
 
 interface TypewriterConfig {
@@ -77,7 +76,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
         this.textWidth += text.width;
 
         if (c === '\n') {
-          this.textHeight += scaled(this.fontSize * this.lineHeight);
+          this.textHeight += this.fontSize * this.lineHeight;
           this.textWidth = 0;
         }
 
@@ -127,7 +126,7 @@ export class Typewriter extends Phaser.GameObjects.Container {
           y: {
             ease: 'Back.Out',
             to: o.y,
-            from: o.y + scaled(this.fontSize * this.characterAnimationOffset),
+            from: o.y + this.fontSize * this.characterAnimationOffset,
           },
           alpha: {
             ease: 'Quadratic.In',

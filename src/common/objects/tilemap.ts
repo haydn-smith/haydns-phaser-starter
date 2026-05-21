@@ -1,6 +1,5 @@
 import { rect, vec2 } from 'common/factories/phaser';
 import { Scene } from 'common/scene';
-import { scaled } from 'common/utils/scaled';
 import { TypeOfTilemap, TypeOfTileset } from 'constants';
 import { Collision } from './collision';
 import { Pathfinder } from './pathfinder';
@@ -36,10 +35,6 @@ export class Tilemap extends Phaser.GameObjects.GameObject {
     }
 
     this.map.layers.forEach((l) => this.layers.push(this.map.createLayer(l.name, tiles).removeFromDisplayList()));
-
-    this.map.layers.forEach((layer) => {
-      layer.tilemapLayer.setScale(scaled());
-    });
 
     this.recalculateCollision();
   }
