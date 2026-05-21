@@ -27,11 +27,6 @@ export class TransitionManager extends Scene {
     this.wipeController = new WipeController(camera);
     this.checkerController = new CheckerController(camera);
 
-    if (this.app().isDebug()) {
-      this.app().controlNumber('Wipe Progress', this.wipeController, 'progress', 0, 1);
-      this.app().controlNumber('Checker Progress', this.checkerController, 'progress', 0, 1);
-    }
-
     camera.filters.external.add(this.wipeController);
     camera.filters.external.add(this.checkerController);
 

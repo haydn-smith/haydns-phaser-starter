@@ -1,4 +1,5 @@
 import { Scene } from 'common/scene';
+import { logEvent, logWarn } from 'common/utils/log';
 import { FONT, SCENE } from 'constants';
 
 export class WebglCheck extends Scene {
@@ -8,8 +9,13 @@ export class WebglCheck extends Scene {
 
   create() {
     if (this.app().renderer.type === Phaser.WEBGL) {
-      this.scene.start('Transition Example');
+      logEvent('WebGL detected - starting game.');
+
+      // Start the game here.
+      // this.scene.start(SCENE.MainMenu);
     } else {
+      logWarn('WebGL is not supported!');
+
       const text = this.add
         .bitmapText(50, 50, FONT.MonogramWhite, 'This game is not supported by your browser.')
         .setScale(3);
